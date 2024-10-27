@@ -1,19 +1,31 @@
 package backend.academy.Maze_game;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Scanner;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
-public class Main {
+public final class Main {
+    private Main() {
+        throw new AssertionError("Utility class should not be instantiated");
+    }
+
     private static final Logger LOGGER = LoggerFactory.getLogger(Main.class);
 
+    /**
+     * сначала предлагается ПОЛЬЗОВАТЕЛЬСКОЕ МЕНЮ:
+     * в котором - 1) сначала выбирается алгоритм генерации лабиринта
+     *             2) затем размеры лабиринта
+     *  на данный момент предлагается найти путь алгоритмом A*, но скорее всего добавится еще алгоритм(BFS/DFS)
+     *  после сгенерированного лабиринта случайным образом находятся точки, при этом сразу проверяется,
+     *  что точки не находятся на стенах лабиринта
+     */
     public static void main(String[] args) {
-        int height = 10;
-        int width = 10;
 
-        Scanner sc = new Scanner(System.in);
-        System.out.println("Выберите генератор лабиринта: 1 - Прима, 2 - Краскала");
+        Scanner sc = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
+        LOGGER.info("Выберите генератор лабиринта: 1 - Прима, 2 - Краскала");
         int choice = sc.nextInt();
 
         Generator generator = switch (choice) {
@@ -22,12 +34,16 @@ public class Main {
             default -> new PrimGenerator();
         };
 
+        LOGGER.info("Выберите размер лабиринта|высота");
+        int height = sc.nextInt();
+        LOGGER.info("Выберите размер лабиринта|ширина");
+        int width = sc.nextInt();
         Maze maze = generator.generate(height, width);
 
         // Отображение начального лабиринта с точками начала и конца
         Renderer renderer = new ConsoleRenderer();
-        System.out.println("Maze with Start (A) and End (B):");
-        System.out.println(renderer.render(maze));
+        LOGGER.info("Maze with Start (A) and End (B):");
+        LOGGER.info("Generated maze:\n{}", renderer.render(maze)); // Отображение лабиринта с путем
 
         Coordinate start = maze.start();
         Coordinate end = maze.end();
@@ -41,7 +57,8 @@ public class Main {
             LOGGER.info("No path found.");
         } else {
             LOGGER.info("Path found:");
-            LOGGER.info(STR."\n\{renderer.render(maze, path)}"); // Отображение лабиринта с путем
+            LOGGER.info("Maze with path:\n{}", renderer.render(maze, path)); // Отображение лабиринта с путем
         }
+        sc.close();
     }
 }

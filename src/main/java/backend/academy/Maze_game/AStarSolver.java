@@ -1,13 +1,20 @@
 package backend.academy.Maze_game;
 
-import java.util.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class AStarSolver implements Solver {
+    private static final Logger LOGGER = LoggerFactory.getLogger(AStarSolver.class);
     private static final int A_STAR_SPACE = 0xFFFFFFFF;
     private static final int A_STAR_WALL = 0xFFFFFFFE;
 
     private int[][] map;
-    private int xs, ys;
+
+    private int xs;
+    private int ys;
     private List<Coordinate> path;
 
     @Override
@@ -29,6 +36,18 @@ public class AStarSolver implements Solver {
 
     private void compute(int y0, int x0, int y1, int x1) {
         // Инициализация карты
+        initializeMap();
+        boolean isExpanded = expandMap(y0, x0, y1, x1);
+
+        if (!isExpanded) {
+            LOGGER.info("Path not found. Ending with no solution.");
+            return;
+        }
+
+        buildPath(y1, x1);
+    }
+
+    private void initializeMap() {
         for (int y = 0; y < ys; y++) {
             for (int x = 0; x < xs; x++) {
                 if (map[y][x] != A_STAR_WALL) {
@@ -36,72 +55,64 @@ public class AStarSolver implements Solver {
                 }
             }
         }
+    }
 
-        int i0 = 0, i1 = xs * ys, n0 = 0, n1 = 0;
-        int[] px = new int[i1 * 2];
-        int[] py = new int[i1 * 2];
+    private boolean expandMap(int y0, int x0, int y1, int x1) {
+        List<Integer> px = new ArrayList<>();
+        List<Integer> py = new ArrayList<>();
 
-        if (map[y0][x0] == A_STAR_SPACE) {
-            px[i0 + n0] = x0;
-            py[i0 + n0] = y0;
-            n0++;
-            map[y0][x0] = 0; // Установка стартовой точки
+        // Initialize starting position
+        px.add(x0);
+        py.add(y0);
+        map[y0][x0] = 0;
 
-            for (int j = 1; j < xs * ys; j++) {
-                if (map[y1][x1] != A_STAR_SPACE) {
-                    break; // Выход, если достигли конца
-                }
+        for (int j = 1; j < xs * ys; j++) {
+            if (map[y1][x1] != A_STAR_SPACE) {
+                return true;
+            }
 
-                boolean expanded = false; // Флаг для отслеживания расширения
+            boolean expanded = false;
+            int n0 = px.size(); // Number of cells to expand
 
-                for (int ii = i0; ii < i0 + n0; ii++) {
-                    int x = px[ii], y = py[ii];
+            for (int ii = 0; ii < n0; ii++) {
+                int x = px.get(ii);
+                int y = py.get(ii);
 
-                    // Проверка соседей
-                    for (int[] dir : new int[][]{{y - 1, x}, {y + 1, x}, {y, x - 1}, {y, x + 1}}) {
-                        int yy = dir[0], xx = dir[1];
+                // Directions for up, down, left, right
+                for (Direction direction : Direction.values()) {
+                    int yy = y + direction.dy();
+                    int xx = x + direction.dx();
 
-                        // Проверка границ карты
-                        if (0 <= yy && yy < ys && 0 <= xx && xx < xs && map[yy][xx] == A_STAR_SPACE) {
-                            map[yy][xx] = j; // Установка значения для данной клетки
-                            px[i1 + n1] = xx; // Добавление в список
-                            py[i1 + n1] = yy;
-                            n1++;
-                            expanded = true; // Мы расширили
-//                            System.out.printf("Expanding to cell (%d, %d) with value %d%n", yy, xx, j);
-                        }
+                    if (0 <= yy && yy < ys && 0 <= xx && xx < xs && map[yy][xx] == A_STAR_SPACE) {
+                        map[yy][xx] = j;
+                        px.add(xx);
+                        py.add(yy);
+                        expanded = true;
                     }
                 }
+            }
 
-                if (!expanded) {
-                    System.out.println("No expansion possible from current cells.");
-                    break; // Выход, если не удалось расширить
-                }
-
-                int tmp = i0;
-                i0 = i1;
-                i1 = tmp;
-                n0 = n1;
-                n1 = 0;
+            if (!expanded) {
+                LOGGER.info("No expansion possible from current cells.");
+                return false;
             }
         }
 
-        // Проверка наличия пути
-        if (map[y1][x1] == A_STAR_SPACE || map[y1][x1] == A_STAR_WALL) {
-            System.out.println("Path not found. Ending with no solution.");
-            return; // Если путь не найден
-        }
+        return false;
+    }
 
-        int ps = map[y1][x1] + 1; // Длина пути
-        int[] pxPath = new int[ps];
-        int[] pyPath = new int[ps];
+    private void buildPath(int y1, int x1) {
+        int ps = map[y1][x1] + 1;
+        List<Integer> pxPath = new ArrayList<>(ps); // Pre-sizing
+        List<Integer> pyPath = new ArrayList<>(ps); // Pre-sizing
 
-        int x = x1, y = y1;
+        int x = x1;
+        int y = y1;
         for (int i = ps - 1; i >= 0; i--) {
-            pxPath[i] = x;
-            pyPath[i] = y;
+            pxPath.add(x);
+            pyPath.add(y);
+            LOGGER.info("Adding step to path: ({}, {})", y, x);
 
-            // Определение следующей клетки в пути
             if (y > 0 && map[y - 1][x] == i - 1) {
                 y--;
             } else if (y < ys - 1 && map[y + 1][x] == i - 1) {
@@ -113,9 +124,9 @@ public class AStarSolver implements Solver {
             }
         }
 
-        // Добавление пути в результат
+
         for (int i = 0; i < ps; i++) {
-            path.add(new Coordinate(pyPath[i], pxPath[i]));
+            path.add(new Coordinate(pyPath.get(i), pxPath.get(i)));
         }
     }
 }

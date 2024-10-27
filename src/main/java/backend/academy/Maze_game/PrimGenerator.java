@@ -1,18 +1,17 @@
 package backend.academy.Maze_game;
 
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Random;
 
 public class PrimGenerator implements Generator {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrimGenerator.class);
+    static SecureRandom random = new SecureRandom();
 
     @Override
     public Maze generate(int height, int width) {
-        Random random = new Random();
         int startRow = random.nextInt(height);
         int startCol = random.nextInt(width);
 
@@ -43,14 +42,11 @@ public class PrimGenerator implements Generator {
             end = selectRandomPassage(maze);
         }
 
-        // Вывод координат начальной и конечной точки
-        for (String s : Arrays.asList(STR."Start coordinates: \{start.row()} \{start.col()}", STR."End coordinates: \{end.row()} \{end.col()}")) {
-            LOGGER.info(s);
-        }
-
+        LOGGER.info("Start coordinates: {} {}", start.row(), start.col());
+        LOGGER.info("End coordinates: {} {}", end.row(), end.col());
         maze.start(start);
         maze.end(end);
-//
+
 //        // Попытка найти путь и вывод результатов
 //        Solver solver = new AStarSolver();
 //        List<Coordinate> path = solver.solve(maze, start, end);
@@ -69,9 +65,10 @@ public class PrimGenerator implements Generator {
     }
 
     private void addWalls(List<Coordinate> walls, Maze maze, int row, int col) {
-        for (int[] direction : directions) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
+        for (List<Integer> direction : DIRECTIONS) {
+            int newRow = row + direction.get(0);
+            int newCol = col + direction.get(1);
+
             if (isInBounds(maze, newRow, newCol) && maze.getCell(newRow, newCol).type() == Cell.Type.WALL) {
                 walls.add(new Coordinate(newRow, newCol));
             }
@@ -84,9 +81,9 @@ public class PrimGenerator implements Generator {
 
     private boolean canCarve(Maze maze, int row, int col) {
         int passages = 0;
-        for (int[] direction : directions) {
-            int newRow = row + direction[0];
-            int newCol = col + direction[1];
+        for (Direction direction : Direction.values()) {
+            int newRow = row + direction.dy();
+            int newCol = col + direction.dx();
             if (isInBounds(maze, newRow, newCol) && maze.getCell(newRow, newCol).type() == Cell.Type.PASSAGE) {
                 passages++;
             }
@@ -103,13 +100,14 @@ public class PrimGenerator implements Generator {
                 }
             }
         }
-        return passages.get(new Random().nextInt(passages.size()));
+        return passages.get(random.nextInt(passages.size()));
     }
 
-    private final int[][] directions = {
-        { -1, 0 }, // вверх
-        { 1, 0 },  // вниз
-        { 0, -1 }, // влево
-        { 0, 1 }   // вправо
-    };
+    private static final List<List<Integer>> DIRECTIONS = List.of(
+        List.of(-1, 0), // up
+        List.of(1, 0),  // down
+        List.of(0, -1), // left
+        List.of(0, 1)   // right
+    );
+
 }

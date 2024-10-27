@@ -1,12 +1,13 @@
 package backend.academy.Maze_game;
 
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 
 public class KruskalGenerator implements Generator {
     private int[][] parent;
+    static SecureRandom random = new SecureRandom();
 
     @Override
     public Maze generate(int height, int width) {
@@ -42,7 +43,8 @@ public class KruskalGenerator implements Generator {
         }
 
         // Перемешиваем рёбра для случайного выбора
-        Collections.shuffle(edges, new Random());
+
+        Collections.shuffle(edges, random);
 
         // Обрабатываем рёбра для построения лабиринта
         for (Edge edge : edges) {
@@ -75,8 +77,10 @@ public class KruskalGenerator implements Generator {
     }
 
     private void union(int root1, int root2) {
-        int row1 = root1 / parent[0].length, col1 = root1 % parent[0].length;
-        int row2 = root2 / parent[0].length, col2 = root2 % parent[0].length;
+        int row1 = root1 / parent[0].length;
+        int col1 = root1 % parent[0].length;
+//        int row2 = root2 / parent[0].length;
+//        int col2 = root2 % parent[0].length;
         parent[row1][col1] = root2;
     }
 
@@ -89,11 +93,15 @@ public class KruskalGenerator implements Generator {
                 }
             }
         }
-        return passages.get(new Random().nextInt(passages.size()));
+
+        return passages.get(random.nextInt(passages.size()));
     }
 
     private static class Edge {
-        int row1, col1, row2, col2;
+        int row1;
+        int col1;
+        int row2;
+        int col2;
 
         Edge(int row1, int col1, int row2, int col2) {
             this.row1 = row1;
