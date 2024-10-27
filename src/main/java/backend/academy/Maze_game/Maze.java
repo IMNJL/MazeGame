@@ -1,9 +1,16 @@
 package backend.academy.Maze_game;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 public final class Maze {
+
+
+    /**
+     * здесь создается лабиринт и парсятся сюдя данные лабиринта(высота, ширина) а затем создается матрица(грид)
+     * */
+
     @Getter private final int height;
     @Getter private final int width;
     private final Cell[][] grid;

@@ -11,16 +11,16 @@ public class ConsoleRenderer implements Renderer {
             for (int col = 0; col < maze.width(); col++) {
                 Coordinate current = new Coordinate(row, col);
                 if (current.equals(maze.start())) {
-                    sb.append("A"); // Start point
+                    sb.append('A'); // Start point
                 } else if (current.equals(maze.end())) {
-                    sb.append("B"); // End point
+                    sb.append('B'); // End point
                 } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
-                    sb.append("#");
+                    sb.append('#');
                 } else {
-                    sb.append(".");
+                    sb.append('.'); // Free space
                 }
             }
-            sb.append("\n");
+            sb.append('\n'); // New line
         }
         return sb.toString();
     }
@@ -32,18 +32,18 @@ public class ConsoleRenderer implements Renderer {
             for (int col = 0; col < maze.width(); col++) {
                 Coordinate current = new Coordinate(row, col);
                 if (current.equals(maze.start())) {
-                    sb.append("A"); // Start point
+                    sb.append('A'); // Start point
                 } else if (current.equals(maze.end())) {
-                    sb.append("B"); // End point
+                    sb.append('B'); // End point
                 } else if (path.contains(current)) {
-                    sb.append("*"); // Path point
+                    sb.append('*'); // Path point
                 } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
-                    sb.append("#");
+                    sb.append('#'); // Wall
                 } else {
-                    sb.append(".");
+                    sb.append('.'); // Free space
                 }
             }
-            sb.append("\n");
+            sb.append('\n'); // New line
         }
         return sb.toString();
     }
