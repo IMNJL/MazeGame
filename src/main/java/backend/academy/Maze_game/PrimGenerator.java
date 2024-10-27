@@ -12,6 +12,11 @@ public class PrimGenerator implements Generator {
 
     @Override
     public Maze generate(int height, int width) {
+
+        if (height <= 0 || width <= 0) {
+            throw new IllegalArgumentException("Maze dimensions must be positive");
+        }
+
         int startRow = random.nextInt(height);
         int startCol = random.nextInt(width);
 

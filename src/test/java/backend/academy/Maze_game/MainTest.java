@@ -4,6 +4,10 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.PrintStream;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 public class MainTest {
@@ -100,4 +104,42 @@ public class MainTest {
         assertTrue(renderedMaze.contains("A"), "Rendered maze should contain start point");
         assertTrue(renderedMaze.contains("B"), "Rendered maze should contain end point");
     }
+
+    @Test
+    public void testPrivateConstructor() throws Exception {
+        var constructor = Main.class.getDeclaredConstructor();
+        constructor.setAccessible(true);
+        assertThrows(InvocationTargetException.class, constructor::newInstance);
+    }
+
+//    @Test
+//    public void testInvalidGeneratorChoice() {
+//        String input = "3\n10\n10"; // Некорректное значение генератора
+//        System.setIn(new ByteArrayInputStream(input.getBytes()));
+//
+//        // Ловим вывод
+//        var outputStream = new ByteArrayOutputStream();
+//        System.setOut(new PrintStream(outputStream));
+//        Main.main(new String[0]);
+//
+//        // Проверяем, что в выводе присутствует сообщение о выборе PrimGenerator по умолчанию
+//        String output = outputStream.toString();
+//        assertTrue(output.contains("выбран генератор Прима по умолчанию"),
+//            "PrimGenerator should be selected by default.");
+//    }
+
+    @Test
+    public void testInvalidMazeSize() {
+        String input = "1\n-10\n10"; // Некорректное значение размера лабиринта
+        System.setIn(new ByteArrayInputStream(input.getBytes()));
+
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            Main.main(new String[0]);
+        });
+
+        assertEquals("Maze dimensions must be positive", exception.getMessage());
+    }
+
+
+
 }

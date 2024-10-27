@@ -21,6 +21,9 @@ public final class Main {
      *  на данный момент предлагается найти путь алгоритмом A*, но скорее всего добавится еще алгоритм(BFS/DFS)
      *  после сгенерированного лабиринта случайным образом находятся точки, при этом сразу проверяется,
      *  что точки не находятся на стенах лабиринта
+     *
+     *  Лабиринт строится из точек('.') - свободный проход, '#' - стенка и '*' - путь по которому идет путь
+     *  от точки А в точку В(точки именно так и обозначены на лабиринте)
      */
     public static void main(String[] args) {
 
@@ -31,7 +34,10 @@ public final class Main {
         Generator generator = switch (choice) {
             case 1 -> new PrimGenerator();
             case 2 -> new KruskalGenerator();
-            default -> new PrimGenerator();
+            default -> {
+                LOGGER.info("Некорректный ввод, выбран генератор Прима по умолчанию.");
+                yield new PrimGenerator();
+            }
         };
 
         LOGGER.info("Выберите размер лабиринта|высота");
