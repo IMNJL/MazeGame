@@ -9,7 +9,7 @@ public enum Direction {
     LEFT(0, -1),  // Move left (decrease x)
     RIGHT(0, 1);  // Move right (increase x)
 
-    private final int dy; // Change in y
+    private final int dy;  // Change in y
     private final int dx; // Change in x
 
     Direction(int dy, int dx) {
