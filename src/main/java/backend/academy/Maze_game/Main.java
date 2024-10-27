@@ -34,7 +34,10 @@ public final class Main {
         Generator generator = switch (choice) {
             case 1 -> new PrimGenerator();
             case 2 -> new KruskalGenerator();
-            default -> new PrimGenerator();
+            default -> {
+                LOGGER.info("Некорректный ввод, выбран генератор Прима по умолчанию.");
+                yield new PrimGenerator();
+            }
         };
 
         LOGGER.info("Выберите размер лабиринта|высота");
