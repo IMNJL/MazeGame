@@ -1,0 +1,28 @@
+### Project ##
+!**/src/main/**
+!**/src/test/**
+
+### Maven ###
+!.mvn/wrapper/maven-wrapper.jar
+target/
+.flattened-pom.xml
+dependency-reduced-pom.xml
+
+### IntelliJ IDEA ###
+!.idea/codeStyles/Project.xml
+!.idea/codeStyles/codeStyleConfig.xml
+.idea/
+*.iws
+*.iml
+*.ipr
+.dist
+.vscode
+.github
+
+
+### Scala SBT
+.bsp
+
+### log files ###
+*.log
+hs_err_pid*
