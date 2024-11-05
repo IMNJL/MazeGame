@@ -41,7 +41,7 @@ public final class Main {
         };
 
         LOGGER.info("Выберите размер лабиринта|высота");
-        int height = sc.nextInt();
+        int height = sc.nextInt(); 
         LOGGER.info("Выберите размер лабиринта|ширина");
         int width = sc.nextInt();
         Maze maze = generator.generate(height, width);

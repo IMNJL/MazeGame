@@ -1,5 +1,5 @@
 package backend.academy.Maze_game;
 
 public interface Generator {
-    Maze generate(int height, int width);
+    Maze generate(int height, int width); 
 }

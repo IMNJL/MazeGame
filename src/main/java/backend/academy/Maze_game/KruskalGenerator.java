@@ -13,7 +13,7 @@ public class KruskalGenerator implements Generator {
     public Maze generate(int height, int width) {
         Maze maze = new Maze(height, width);
 
-        // Заполнение лабиринта стенами
+        // Заполнение лабиринта  стенами
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 maze.setCell(row, col, Cell.Type.WALL);

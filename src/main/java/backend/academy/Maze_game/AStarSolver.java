@@ -11,7 +11,7 @@ public class AStarSolver implements Solver {
     private static final int A_STAR_SPACE = 0xFFFFFFFF;
     private static final int A_STAR_WALL = 0xFFFFFFFE;
 
-    private int[][] map;
+    private int[][] map; 
 
     private int xs;
     private int ys;
