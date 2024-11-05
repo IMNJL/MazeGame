@@ -2,7 +2,7 @@ package backend.academy.Maze_game;
 
 import java.util.List;
 
-public class ConsoleRenderer implements Renderer {
+public class ConsoleRenderer implements Renderer { 
 
     @Override
     public String render(Maze maze) {
