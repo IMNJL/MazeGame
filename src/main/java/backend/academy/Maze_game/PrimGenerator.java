@@ -17,7 +17,7 @@ public class PrimGenerator implements Generator {
             throw new IllegalArgumentException("Maze dimensions must be positive");
         }
 
-        int startRow = random.nextInt(height); 
+        int startRow = random.nextInt(height);
         int startCol = random.nextInt(width);
 
         Maze maze = new Maze(height, width);
