@@ -1,8 +1,10 @@
-package backend.academy.Maze_game;
+package backend.academy.Maze_game.solvers;
 
 
 import java.util.ArrayList;
 import java.util.List;
+
+import backend.academy.Maze_game.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

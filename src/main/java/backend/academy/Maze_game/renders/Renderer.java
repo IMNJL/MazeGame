@@ -1,4 +1,7 @@
-package backend.academy.Maze_game;
+package backend.academy.Maze_game.renders;
+
+import backend.academy.Maze_game.Coordinate;
+import backend.academy.Maze_game.Maze;
 
 import java.util.List;
 

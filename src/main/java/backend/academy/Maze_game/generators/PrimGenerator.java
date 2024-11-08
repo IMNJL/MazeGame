@@ -1,8 +1,13 @@
-package backend.academy.Maze_game;
+package backend.academy.Maze_game.generators;
 
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
+
+import backend.academy.Maze_game.Cell;
+import backend.academy.Maze_game.Coordinate;
+import backend.academy.Maze_game.Direction;
+import backend.academy.Maze_game.Maze;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

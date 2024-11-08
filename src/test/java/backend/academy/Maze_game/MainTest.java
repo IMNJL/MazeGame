@@ -1,14 +1,16 @@
 package backend.academy.Maze_game;
 
+import backend.academy.Maze_game.generators.Generator;
+import backend.academy.Maze_game.generators.KruskalGenerator;
+import backend.academy.Maze_game.generators.PrimGenerator;
+import backend.academy.Maze_game.renders.ConsoleRenderer;
+import backend.academy.Maze_game.renders.Renderer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.PrintStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.List;
 
 public class MainTest {
 
