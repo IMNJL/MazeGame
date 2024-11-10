@@ -5,6 +5,7 @@ import backend.academy.Maze_game.generators.KruskalGenerator;
 import backend.academy.Maze_game.generators.PrimGenerator;
 import backend.academy.Maze_game.renders.ConsoleRenderer;
 import backend.academy.Maze_game.renders.Renderer;
+import backend.academy.Maze_game.renders.StylishConsoleRenderer;
 import backend.academy.Maze_game.solvers.AStarSolver;
 import backend.academy.Maze_game.solvers.BFSSolver;
 import backend.academy.Maze_game.solvers.DFSSolver;
@@ -68,7 +69,7 @@ public class MazeUtil {
 
     private static Maze generateAndDisplayMaze(Generator generator, int height, int width, Scanner sc) {
         Maze maze = generator.generate(height, width); // Генерация лабиринта без точек начала и конца
-        Renderer renderer = new ConsoleRenderer();
+        Renderer renderer = new StylishConsoleRenderer();
         LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
 
         // Запрос координат для начала и конца
@@ -94,7 +95,7 @@ public class MazeUtil {
 
         List<Coordinate> path = solver.solve(maze, start, end);
 
-        Renderer renderer = new ConsoleRenderer();
+        Renderer renderer = new StylishConsoleRenderer();
         if (path == null || path.isEmpty()) {
             LOGGER.info("No path found.");
         } else {
