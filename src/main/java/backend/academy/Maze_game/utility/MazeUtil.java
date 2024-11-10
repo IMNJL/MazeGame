@@ -6,6 +6,9 @@ import backend.academy.Maze_game.generators.PrimGenerator;
 import backend.academy.Maze_game.renders.ConsoleRenderer;
 import backend.academy.Maze_game.renders.Renderer;
 import backend.academy.Maze_game.solvers.AStarSolver;
+import backend.academy.Maze_game.solvers.BFSSolver;
+import backend.academy.Maze_game.solvers.DFSSolver;
+import backend.academy.Maze_game.solvers.DijkstraSolver;
 import backend.academy.Maze_game.solvers.Solver;
 import java.util.List;
 import java.util.Scanner;
@@ -26,7 +29,8 @@ public class MazeUtil {
         Maze maze = generateAndDisplayMaze(generator, height, width, sc);
 
         // Поиск пути и его отображение
-        findAndDisplayPath(maze, maze.start(), maze.end());
+        Solver solver  = chooseSolver(sc);
+        findAndDisplayPath(maze, maze.start(), maze.end(), solver);
     }
 
     private static Generator chooseGenerator(Scanner sc) {
@@ -38,6 +42,21 @@ public class MazeUtil {
             default -> {
                 LOGGER.info("Некорректный ввод, выбран генератор Прима по умолчанию.");
                 yield new PrimGenerator();
+            }
+        };
+    }
+
+    private static Solver chooseSolver(Scanner sc) {
+        LOGGER.info("Выберите алгоритм поиска пути: 1 - A*, 2 - Дейкстра, 3 - BFS, 4 - DFS");
+        int solverChoice = sc.nextInt();
+        return switch (solverChoice) {
+            case 1 -> new AStarSolver(); // A* алгоритм
+            case 2 -> new DijkstraSolver(); // Дейкстра
+            case 3 -> new BFSSolver(); // BFS
+            case 4 -> new DFSSolver(); // DFS
+            default -> {
+                LOGGER.info("Некорректный ввод, выбран A* по умолчанию.");
+                yield new AStarSolver(); // Если выбор неверный, по умолчанию A*
             }
         };
     }
@@ -65,9 +84,14 @@ public class MazeUtil {
         return maze;
     }
 
-    private static void findAndDisplayPath(Maze maze, Coordinate start, Coordinate end) {
+    private static void findAndDisplayPath(Maze maze, Coordinate start, Coordinate end, Solver solver) {
 
-        Solver solver = new AStarSolver();
+        // Дальше можно использовать solver для решения задачи поиска пути
+        LOGGER.info("Используем решатель: {}", solver.getClass().getSimpleName());
+
+        LOGGER.info("Start coordinates: {}", start);
+        LOGGER.info("End coordinates: {}", end);
+
         List<Coordinate> path = solver.solve(maze, start, end);
 
         Renderer renderer = new ConsoleRenderer();
