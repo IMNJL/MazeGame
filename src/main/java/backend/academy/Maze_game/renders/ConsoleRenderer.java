@@ -1,9 +1,8 @@
 package backend.academy.Maze_game.renders;
 
-import backend.academy.Maze_game.Cell;
-import backend.academy.Maze_game.Coordinate;
-import backend.academy.Maze_game.Maze;
-
+import backend.academy.Maze_game.utility.Cell;
+import backend.academy.Maze_game.utility.Coordinate;
+import backend.academy.Maze_game.utility.Maze;
 import java.util.List;
 
 public class ConsoleRenderer implements Renderer {
@@ -13,12 +12,7 @@ public class ConsoleRenderer implements Renderer {
         StringBuilder sb = new StringBuilder();
         for (int row = 0; row < maze.height(); row++) {
             for (int col = 0; col < maze.width(); col++) {
-                Coordinate current = new Coordinate(row, col);
-                if (current.equals(maze.start())) {
-                    sb.append('A'); // Start point
-                } else if (current.equals(maze.end())) {
-                    sb.append('B'); // End point
-                } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
+                if (maze.getCell(row, col).type() == Cell.Type.WALL) {
                     sb.append('#');
                 } else {
                     sb.append('.'); // Free space

@@ -1,4 +1,4 @@
-package backend.academy.Maze_game;
+package backend.academy.Maze_game.utility;
 
 import lombok.Getter;
 

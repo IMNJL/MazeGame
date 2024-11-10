@@ -1,6 +1,8 @@
 package backend.academy.Maze_game;
 
 import backend.academy.Maze_game.generators.PrimGenerator;
+import backend.academy.Maze_game.utility.Cell;
+import backend.academy.Maze_game.utility.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;

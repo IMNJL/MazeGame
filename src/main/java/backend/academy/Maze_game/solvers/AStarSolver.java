@@ -1,17 +1,18 @@
 package backend.academy.Maze_game.solvers;
 
-
+import backend.academy.Maze_game.utility.Cell;
+import backend.academy.Maze_game.utility.Coordinate;
+import backend.academy.Maze_game.utility.Direction;
+import backend.academy.Maze_game.utility.Maze;
 import java.util.ArrayList;
 import java.util.List;
-
-import backend.academy.Maze_game.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AStarSolver implements Solver {
     private static final Logger LOGGER = LoggerFactory.getLogger(AStarSolver.class);
-    private static final int A_STAR_SPACE = 0xFFFFFFFF;
-    private static final int A_STAR_WALL = 0xFFFFFFFE;
+    private static final int A_STAR_SPACE = Integer.MAX_VALUE;
+    private static final int A_STAR_WALL = Integer.MAX_VALUE - 1;
 
     private int[][] map;
 
@@ -125,7 +126,6 @@ public class AStarSolver implements Solver {
                 x++;
             }
         }
-
 
         for (int i = 0; i < ps; i++) {
             path.add(new Coordinate(pyPath.get(i), pxPath.get(i)));
