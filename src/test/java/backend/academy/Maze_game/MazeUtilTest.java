@@ -70,14 +70,14 @@ class MazeUtilTest {
     void testChooseSolver_BFS() {
         when(scannerMock.nextInt()).thenReturn(3);
         Solver solver = MazeUtil.chooseSolver(scannerMock);
-        assertTrue(solver instanceof BFSSolver);
+        assertInstanceOf(BFSSolver.class, solver);
     }
 
     @Test
     void testChooseSolver_DFS() {
         when(scannerMock.nextInt()).thenReturn(4);
         Solver solver = MazeUtil.chooseSolver(scannerMock);
-        assertTrue(solver instanceof DFSSolver);
+        assertInstanceOf(DFSSolver.class, solver);
     }
 
     @Test
