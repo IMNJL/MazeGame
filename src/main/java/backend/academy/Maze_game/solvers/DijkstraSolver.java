@@ -24,12 +24,12 @@ public class DijkstraSolver implements Solver {
     }
 
     public void initializeMap(Maze maze) {
-        int width = maze.width();
-        int height = maze.height();
-        map = new int[height][width];
+        int width1 = maze.width();
+        int height1 = maze.height();
+        map = new int[height1][width1];
 
-        for (int y = 0; y < height; y++) {
-            for (int x = 0; x < width; x++) {
+        for (int y = 0; y < height1; y++) {
+            for (int x = 0; x < width1; x++) {
                 // Set INF for walls, 0 for free spaces
                 map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
             }
