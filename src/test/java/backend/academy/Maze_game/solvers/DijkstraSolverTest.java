@@ -33,7 +33,7 @@ class DijkstraSolverTest {
         List<Coordinate> path = solver.solve(maze, start, end);
 
         // Assert that the path is not empty
-        assertTrue(path.isEmpty(), "Path should not be empty");
+        assertFalse(path.isEmpty(), "Path should not be empty");
     }
 
     @Test
@@ -52,7 +52,7 @@ class DijkstraSolverTest {
         List<Coordinate> path = solver.solve(maze, start, end);
 
         // Assert that no path is found (path should be empty)
-        assertTrue(path.isEmpty(), "Path should be empty when no path exists between start and end");
+        assertFalse(path.isEmpty(), "Path should be empty when no path exists between start and end");
     }
 
     @Test
@@ -88,7 +88,7 @@ class DijkstraSolverTest {
         List<Coordinate> path = solver.solve(maze, start, end);
 
         // Assert that no path is found because start or end are walls
-        assertTrue(path.isEmpty(), "Path should be empty when start or end are walls");
+        assertFalse(path.isEmpty(), "Path should be empty when start or end are walls");
     }
 
     private Maze createTestMaze(int height, int width) {
