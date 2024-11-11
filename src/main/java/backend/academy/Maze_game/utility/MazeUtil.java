@@ -3,7 +3,6 @@ package backend.academy.Maze_game.utility;
 import backend.academy.Maze_game.generators.Generator;
 import backend.academy.Maze_game.generators.KruskalGenerator;
 import backend.academy.Maze_game.generators.PrimGenerator;
-import backend.academy.Maze_game.renders.ConsoleRenderer;
 import backend.academy.Maze_game.renders.Renderer;
 import backend.academy.Maze_game.renders.StylishConsoleRenderer;
 import backend.academy.Maze_game.solvers.AStarSolver;
@@ -73,8 +72,8 @@ public class MazeUtil {
         LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
 
         // Запрос координат для начала и конца
-        Coordinate start = getCoordinateFromUser("A", height, width, sc);
-        Coordinate end = getCoordinateFromUser("B", height, width, sc);
+        Coordinate start = getCoordinateFromUser("A", height, width, maze, sc);
+        Coordinate end = getCoordinateFromUser("B", height, width, maze, sc);
 
         // Генерация лабиринта с точками старта и конца
         maze = generator.generate(maze, start, end);
@@ -104,7 +103,7 @@ public class MazeUtil {
         }
     }
 
-    private static Coordinate getCoordinateFromUser(String pointName, int height, int width, Scanner sc) {
+    private static Coordinate getCoordinateFromUser(String pointName, int height, int width, Maze maze, Scanner sc) {
         int row;
         int col;
         boolean valid = false;
@@ -118,6 +117,8 @@ public class MazeUtil {
             // Проверка на валидность координат
             if (row < 0 || row >= height || col < 0 || col >= width) {
                 LOGGER.info("Координаты вне пределов лабиринта. Попробуйте снова.");
+            } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
+                LOGGER.info("Координаты указывают на стену. Пожалуйста, выберите другую точку.");
             } else {
                 valid = true;
             }

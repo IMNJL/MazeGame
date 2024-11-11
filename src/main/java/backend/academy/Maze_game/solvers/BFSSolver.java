@@ -4,7 +4,11 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 public class BFSSolver implements Solver {
     private int xs;
@@ -46,7 +50,9 @@ public class BFSSolver implements Solver {
                 int newY = y + direction.dy();
                 int newX = x + direction.dx();
 
-                if (0 <= newY && newY < ys && 0 <= newX && newX < xs && !visited[newY][newX] && maze.grid()[newY][newX].type() != Cell.Type.WALL) {
+                if (0 <= newY && newY < ys && 0 <= newX && newX < xs
+                    && !visited[newY][newX]
+                    && maze.grid()[newY][newX].type() != Cell.Type.WALL) {
                     visited[newY][newX] = true;
                     parent[newY][newX] = y * xs + x; // Store parent node
                     queue.add(new Coordinate(newY, newX));

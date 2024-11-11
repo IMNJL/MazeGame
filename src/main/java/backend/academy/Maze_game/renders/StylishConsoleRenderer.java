@@ -4,6 +4,12 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
 import java.util.List;
+import static backend.academy.Maze_game.utility.Elements.WALL;
+import static backend.academy.Maze_game.utility.Elements.BORDER;
+import static backend.academy.Maze_game.utility.Elements.SPACE;
+import static backend.academy.Maze_game.utility.Elements.STARTPOINT;
+import static backend.academy.Maze_game.utility.Elements.ENDPOINT;
+import static backend.academy.Maze_game.utility.Elements.PATH;
 
 public class StylishConsoleRenderer implements Renderer {
 
@@ -12,30 +18,26 @@ public class StylishConsoleRenderer implements Renderer {
         StringBuilder sb = new StringBuilder();
 
         // Top border
-        sb.append("+");
-        for (int col = 0; col < maze.width(); col++) {
-            sb.append("---+");
-        }
-        sb.append("\n");
+        sb.append('+');
+        sb.append(String.valueOf(BORDER).repeat(Math.max(0, maze.width())));
+        sb.append('\n');
 
         for (int row = 0; row < maze.height(); row++) {
             // Row content
-            sb.append("|");
+            sb.append('|');
             for (int col = 0; col < maze.width(); col++) {
                 if (maze.getCell(row, col).type() == Cell.Type.WALL) {
-                    sb.append(" # |");
+                    sb.append(WALL);
                 } else {
-                    sb.append("   |");
+                    sb.append(SPACE);
                 }
             }
             sb.append("\n");
 
             // Horizontal separator after each row
-            sb.append("+");
-            for (int col = 0; col < maze.width(); col++) {
-                sb.append("---+");
-            }
-            sb.append("\n");
+            sb.append('+');
+            sb.append(String.valueOf(BORDER).repeat(Math.max(0, maze.width())));
+            sb.append('\n');
         }
 
         return sb.toString();
@@ -46,37 +48,33 @@ public class StylishConsoleRenderer implements Renderer {
         StringBuilder sb = new StringBuilder();
 
         // Top border
-        sb.append("+");
-        for (int col = 0; col < maze.width(); col++) {
-            sb.append("---+");
-        }
-        sb.append("\n");
+        sb.append('+');
+        sb.append(String.valueOf(BORDER).repeat(Math.max(0, maze.width())));
+        sb.append('\n');
 
         for (int row = 0; row < maze.height(); row++) {
             // Row content with path, start, and end
-            sb.append("|");
+            sb.append('|');
             for (int col = 0; col < maze.width(); col++) {
                 Coordinate current = new Coordinate(row, col);
                 if (current.equals(maze.start())) {
-                    sb.append(" A |"); // Start point
+                    sb.append(STARTPOINT); // Start point
                 } else if (current.equals(maze.end())) {
-                    sb.append(" B |"); // End point
+                    sb.append(ENDPOINT); // End point
                 } else if (path.contains(current)) {
-                    sb.append(" * |"); // Path point
+                    sb.append(PATH); // Path point
                 } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
-                    sb.append(" # |"); // Wall
+                    sb.append(WALL); // Wall
                 } else {
-                    sb.append("   |"); // Free space
+                    sb.append(SPACE); // Free space
                 }
             }
             sb.append("\n");
 
             // Horizontal separator after each row
-            sb.append("+");
-            for (int col = 0; col < maze.width(); col++) {
-                sb.append("---+");
-            }
-            sb.append("\n");
+            sb.append('+');
+            sb.append(String.valueOf(BORDER).repeat(Math.max(0, maze.width())));
+            sb.append('\n');
         }
 
         return sb.toString();

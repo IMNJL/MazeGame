@@ -4,7 +4,9 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class DFSSolver implements Solver {
     private int xs;
@@ -25,6 +27,7 @@ public class DFSSolver implements Solver {
 
         return path;
     }
+
 
     private boolean dfs(int y, int x, int y1, int x1, Maze maze) {
         if (y < 0 || y >= ys || x < 0 || x >= xs || visited[y][x] || maze.grid()[y][x].type() == Cell.Type.WALL) {

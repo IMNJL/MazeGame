@@ -11,6 +11,7 @@ import org.slf4j.LoggerFactory;
 
 public class AStarSolver implements Solver {
     private static final Logger LOGGER = LoggerFactory.getLogger(AStarSolver.class);
+    private static final int INF = Integer.MAX_VALUE;
     private static final int A_STAR_SPACE = Integer.MAX_VALUE;
     private static final int A_STAR_WALL = Integer.MAX_VALUE - 1;
 
@@ -22,17 +23,7 @@ public class AStarSolver implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        xs = maze.width();
-        ys = maze.height();
-        map = new int[ys][xs];
-
-        for (int y = 0; y < ys; y++) {
-            for (int x = 0; x < xs; x++) {
-                map[y][x] = maze.grid()[y][x].type() == Cell.Type.WALL ? A_STAR_WALL : A_STAR_SPACE;
-            }
-        }
-
-        path = new ArrayList<>();
+        initializeMap(maze);
         compute(start.row(), start.col(), end.row(), end.col());
         return path;
     }
@@ -130,5 +121,20 @@ public class AStarSolver implements Solver {
         for (int i = 0; i < ps; i++) {
             path.add(new Coordinate(pyPath.get(i), pxPath.get(i)));
         }
+    }
+
+    public void initializeMap(Maze maze) {
+        int xs = maze.width();
+        int ys = maze.height();
+        map = new int[ys][xs];
+
+        for (int y = 0; y < ys; y++) {
+            for (int x = 0; x < xs; x++) {
+                // Set INF for walls, 0 for free spaces
+                map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
+            }
+        }
+
+        path = new ArrayList<>();
     }
 }

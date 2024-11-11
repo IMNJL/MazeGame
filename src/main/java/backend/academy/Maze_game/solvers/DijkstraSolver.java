@@ -4,7 +4,11 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.List;
+import java.util.PriorityQueue;
 
 public class DijkstraSolver implements Solver {
     private static final int INF = Integer.MAX_VALUE;
@@ -15,17 +19,7 @@ public class DijkstraSolver implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        xs = maze.width();
-        ys = maze.height();
-        map = new int[ys][xs];
-
-        for (int y = 0; y < ys; y++) {
-            for (int x = 0; x < xs; x++) {
-                map[y][x] = maze.grid()[y][x].type() == Cell.Type.WALL ? INF : INF;
-            }
-        }
-
-        path = new ArrayList<>();
+        initializeMap(maze);
         return compute(start.row(), start.col(), end.row(), end.col());
     }
 
@@ -58,7 +52,8 @@ public class DijkstraSolver implements Solver {
 
     private void buildPath(int y1, int x1) {
         // Similar to A* path reconstruction
-        int x = x1, y = y1;
+        int x = x1;
+        int y = y1;
         while (map[y][x] != 0) {
             path.add(new Coordinate(y, x));
             for (Direction direction : Direction.values()) {
@@ -76,12 +71,29 @@ public class DijkstraSolver implements Solver {
     }
 
     private static class Node {
-        int x, y, distance;
+        int x;
+        int y;
+        int distance;
 
         Node(int x, int y, int distance) {
             this.x = x;
             this.y = y;
             this.distance = distance;
         }
+    }
+
+    public void initializeMap(Maze maze) {
+        int xs = maze.width();
+        int ys = maze.height();
+        map = new int[ys][xs];
+
+        for (int y = 0; y < ys; y++) {
+            for (int x = 0; x < xs; x++) {
+                // Set INF for walls, 0 for free spaces
+                map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
+            }
+        }
+
+        path = new ArrayList<>();
     }
 }
