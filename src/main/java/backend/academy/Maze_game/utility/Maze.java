@@ -12,9 +12,9 @@ public final class Maze {
 
     @Getter private final int height;
     @Getter private final int width;
-    private final Cell[][] grid;
-    @Setter private Coordinate start;
-    @Setter private Coordinate end;
+    @Getter private final Cell[][] grid;
+    @Getter @Setter private Coordinate start;
+    @Getter @Setter private Coordinate end;
 
     public Maze(int height, int width) {
         this.height = height;
