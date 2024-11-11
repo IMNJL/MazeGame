@@ -1,5 +1,9 @@
-package backend.academy.Maze_game;
+package backend.academy.Maze_game.generators;
 
+import backend.academy.Maze_game.utility.Cell;
+import backend.academy.Maze_game.utility.Coordinate;
+import backend.academy.Maze_game.utility.Direction;
+import backend.academy.Maze_game.utility.Maze;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
@@ -8,27 +12,43 @@ import org.slf4j.LoggerFactory;
 
 public class PrimGenerator implements Generator {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrimGenerator.class);
-    static SecureRandom random = new SecureRandom();
+    private static final SecureRandom RANDOM = new SecureRandom();
 
     @Override
     public Maze generate(int height, int width) {
-
         if (height <= 0 || width <= 0) {
             throw new IllegalArgumentException("Maze dimensions must be positive");
         }
 
-        int startRow = random.nextInt(height);
-        int startCol = random.nextInt(width);
-
         Maze maze = new Maze(height, width);
+        // Генерация лабиринта без точек старта и конца
+        generateMazeWithoutStartEnd(maze);
+
+        return maze;
+    }
+
+
+    @Override
+    public Maze generate(Maze maze, Coordinate start, Coordinate end) {
+        // Назначаем точки старта и конца
+        maze.start(start);
+        maze.end(end);
+
+        return maze;
+    }
+
+    private void generateMazeWithoutStartEnd(Maze maze) {
+        // Логика генерации лабиринта (например, Прима)
+        int startRow = RANDOM.nextInt(maze.height());
+        int startCol = RANDOM.nextInt(maze.width());
+
         maze.setCell(startRow, startCol, Cell.Type.PASSAGE);
 
         List<Coordinate> walls = new ArrayList<>();
         addWalls(walls, maze, startRow, startCol);
 
-        // Maze generation logic
         while (!walls.isEmpty()) {
-            Coordinate wall = walls.remove(random.nextInt(walls.size()));
+            Coordinate wall = walls.remove(RANDOM.nextInt(walls.size()));
             int row = wall.row();
             int col = wall.col();
 
@@ -37,36 +57,6 @@ public class PrimGenerator implements Generator {
                 addWalls(walls, maze, row, col);
             }
         }
-
-        // Select random start and end points
-        Coordinate start = selectRandomPassage(maze);
-        Coordinate end = selectRandomPassage(maze);
-
-        // Ensure start and end are different
-        while (start.equals(end)) {
-            end = selectRandomPassage(maze);
-        }
-
-        LOGGER.info("Start coordinates: {} {}", start.row(), start.col());
-        LOGGER.info("End coordinates: {} {}", end.row(), end.col());
-        maze.start(start);
-        maze.end(end);
-
-//        // Попытка найти путь и вывод результатов
-//        Solver solver = new AStarSolver();
-//        List<Coordinate> path = solver.solve(maze, start, end);
-//
-//        if (path == null || path.isEmpty()) {
-//            LOGGER.info("No path found.");
-//        } else {
-//            LOGGER.info("Path found:");
-//            for (Coordinate coord : path) {
-//                LOGGER.info("(%d, %d) ", coord.row(), coord.col());
-//            }
-//            LOGGER.info(""); // Переход на новую строку после пути
-//        }
-
-        return maze;
     }
 
     private void addWalls(List<Coordinate> walls, Maze maze, int row, int col) {
@@ -96,23 +86,10 @@ public class PrimGenerator implements Generator {
         return passages == 1;
     }
 
-    private Coordinate selectRandomPassage(Maze maze) {
-        List<Coordinate> passages = new ArrayList<>();
-        for (int row = 0; row < maze.height(); row++) {
-            for (int col = 0; col < maze.width(); col++) {
-                if (maze.getCell(row, col).type() == Cell.Type.PASSAGE) {
-                    passages.add(new Coordinate(row, col));
-                }
-            }
-        }
-        return passages.get(random.nextInt(passages.size()));
-    }
-
     private static final List<List<Integer>> DIRECTIONS = List.of(
         List.of(-1, 0), // up
         List.of(1, 0),  // down
         List.of(0, -1), // left
         List.of(0, 1)   // right
     );
-
 }
