@@ -1,6 +1,5 @@
 package backend.academy.Maze_game.solvers;
 
-import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
@@ -19,23 +18,18 @@ public class DijkstraSolver implements Solver {
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        initializeMap(maze);
-        return compute(start.row(), start.col(), end.row(), end.col());
-    }
+        xs = maze.width();
+        ys = maze.height();
+        map = new int[ys][xs];
 
-    public void initializeMap(Maze maze) {
-        int width1 = maze.width();
-        int height1 = maze.height();
-        map = new int[height1][width1];
-
-        for (int y = 0; y < height1; y++) {
-            for (int x = 0; x < width1; x++) {
-                // Set INF for walls, 0 for free spaces
-                map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
+        for (int y = 0; y < ys; y++) {
+            for (int x = 0; x < xs; x++) {
+                map[y][x] = INF;
             }
         }
 
         path = new ArrayList<>();
+        return compute(start.row(), start.col(), end.row(), end.col());
     }
 
     private List<Coordinate> compute(int y0, int x0, int y1, int x1) {
@@ -96,6 +90,4 @@ public class DijkstraSolver implements Solver {
             this.distance = distance;
         }
     }
-
-
 }
