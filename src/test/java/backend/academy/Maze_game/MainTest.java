@@ -1,14 +1,5 @@
 package backend.academy.Maze_game;
 
-import backend.academy.Maze_game.generators.Generator;
-import backend.academy.Maze_game.generators.KruskalGenerator;
-import backend.academy.Maze_game.generators.PrimGenerator;
-import backend.academy.Maze_game.renders.ConsoleRenderer;
-import backend.academy.Maze_game.renders.Renderer;
-import backend.academy.Maze_game.renders.StylishConsoleRenderer;
-import backend.academy.Maze_game.utility.Cell;
-import backend.academy.Maze_game.utility.Maze;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -17,18 +8,7 @@ import java.lang.reflect.InvocationTargetException;
 
 public class MainTest {
 
-    private Generator primGenerator;
-    private Generator kruskalGenerator;
-    private Renderer consoleRenderer;
-
-    @BeforeEach
-    public void setUp() {
-        primGenerator = new PrimGenerator();
-        kruskalGenerator = new KruskalGenerator();
-        consoleRenderer = new StylishConsoleRenderer();
-    }
-
-      @Test
+    @Test
     public void testPrivateConstructor() throws Exception {
         var constructor = Main.class.getDeclaredConstructor();
         constructor.setAccessible(true);
@@ -46,7 +26,4 @@ public class MainTest {
 
         assertEquals("Maze dimensions must be positive", exception.getMessage());
     }
-
-
-
 }
