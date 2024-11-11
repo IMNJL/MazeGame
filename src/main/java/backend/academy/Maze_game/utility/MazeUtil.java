@@ -35,7 +35,7 @@ public class MazeUtil {
         findAndDisplayPath(maze, maze.start(), maze.end(), solver);
     }
 
-    private static Generator chooseGenerator(Scanner sc) {
+    public static Generator chooseGenerator(Scanner sc) {
         LOGGER.info("Выберите генератор лабиринта: 1 - Прима, 2 - Краскала");
         int choice = sc.nextInt();
         return switch (choice) {
@@ -48,7 +48,7 @@ public class MazeUtil {
         };
     }
 
-    private static Solver chooseSolver(Scanner sc) {
+    public static Solver chooseSolver(Scanner sc) {
         LOGGER.info("Выберите алгоритм поиска пути: 1 - A*, 2 - Дейкстра, 3 - BFS, 4 - DFS");
         int solverChoice = sc.nextInt();
         return switch (solverChoice) {
@@ -63,12 +63,12 @@ public class MazeUtil {
         };
     }
 
-    private static int getDimension(String dimension, Scanner sc) {
+    public static int getDimension(String dimension, Scanner sc) {
         LOGGER.info("Выберите размер лабиринта|{}", dimension);
         return sc.nextInt();
     }
 
-    private static Maze generateAndDisplayMaze(Generator generator, int height, int width, Scanner sc) {
+    public static Maze generateAndDisplayMaze(Generator generator, int height, int width, Scanner sc) {
         Maze maze = generator.generate(height, width); // Генерация лабиринта без точек начала и конца
         Renderer renderer = new StylishConsoleRenderer();
         LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
@@ -105,7 +105,7 @@ public class MazeUtil {
         }
     }
 
-    private static Coordinate getCoordinateFromUser(String pointName, int height, int width, Maze maze, Scanner sc) {
+    public static Coordinate getCoordinateFromUser(String pointName, int height, int width, Maze maze, Scanner sc) {
         int row;
         int col;
         boolean valid = false;
