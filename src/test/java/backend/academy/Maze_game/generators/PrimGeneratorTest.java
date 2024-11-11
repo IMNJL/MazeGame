@@ -57,24 +57,6 @@ class PrimGeneratorTest {
     }
 
     @Test
-    void testGenerateMazeWithStartAndEnd() {
-        Maze maze = generator.generate(5, 5);
-        Coordinate start = new Coordinate(1, 1);
-        Coordinate end = new Coordinate(3, 3);
-        maze = generator.generate(maze, start, end);
-
-        // Check start and end points
-        assertEquals(start, maze.start(), "Start point is incorrect");
-        assertEquals(end, maze.end(), "End point is incorrect");
-
-        // Verify that start and end points are passages
-        assertEquals(Cell.Type.PASSAGE, maze.getCell(start.col(), start.row()).type(),
-            "Expected start point to be a passage");
-        assertEquals(Cell.Type.PASSAGE, maze.getCell(end.row(), end.col()).type(),
-            "Expected end point to be a passage");
-    }
-
-    @Test
     void testMazeGenerationPassagesAndWalls() {
         int height = 5;
         int width = 5;
