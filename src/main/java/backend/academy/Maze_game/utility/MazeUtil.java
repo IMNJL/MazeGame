@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 @UtilityClass
 public class MazeUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MazeUtil.class);
+    private static final int BFS = 3;
+    private static final int DFS = 4;
 
     public static void runMazeGame(Scanner sc) {
         Generator generator = chooseGenerator(sc);
@@ -52,8 +54,8 @@ public class MazeUtil {
         return switch (solverChoice) {
             case 1 -> new AStarSolver(); // A* алгоритм
             case 2 -> new DijkstraSolver(); // Дейкстра
-            case 3 -> new BFSSolver(); // BFS
-            case 4 -> new DFSSolver(); // DFS
+            case BFS -> new BFSSolver(); // BFS
+            case DFS -> new DFSSolver(); // DFS
             default -> {
                 LOGGER.info("Некорректный ввод, выбран A* по умолчанию.");
                 yield new AStarSolver(); // Если выбор неверный, по умолчанию A*

@@ -4,12 +4,12 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
 import java.util.List;
-import static backend.academy.Maze_game.utility.Elements.WALL;
 import static backend.academy.Maze_game.utility.Elements.BORDER;
-import static backend.academy.Maze_game.utility.Elements.SPACE;
-import static backend.academy.Maze_game.utility.Elements.STARTPOINT;
 import static backend.academy.Maze_game.utility.Elements.ENDPOINT;
 import static backend.academy.Maze_game.utility.Elements.PATH;
+import static backend.academy.Maze_game.utility.Elements.SPACE;
+import static backend.academy.Maze_game.utility.Elements.STARTPOINT;
+import static backend.academy.Maze_game.utility.Elements.WALL;
 
 public class StylishConsoleRenderer implements Renderer {
 
@@ -32,7 +32,7 @@ public class StylishConsoleRenderer implements Renderer {
                     sb.append(SPACE);
                 }
             }
-            sb.append("\n");
+            sb.append('\n');
 
             // Horizontal separator after each row
             sb.append('+');
@@ -69,7 +69,7 @@ public class StylishConsoleRenderer implements Renderer {
                     sb.append(SPACE); // Free space
                 }
             }
-            sb.append("\n");
+            sb.append('\n');
 
             // Horizontal separator after each row
             sb.append('+');

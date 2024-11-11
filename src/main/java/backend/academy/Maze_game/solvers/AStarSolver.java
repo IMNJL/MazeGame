@@ -28,6 +28,21 @@ public class AStarSolver implements Solver {
         return path;
     }
 
+    public void initializeMap(Maze maze) {
+        int width = maze.width();
+        int height = maze.height();
+        map = new int[height][width];
+
+        for (int y = 0; y < height; y++) {
+            for (int x = 0; x < width; x++) {
+                // Set INF for walls, 0 for free spaces
+                map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
+            }
+        }
+
+        path = new ArrayList<>();
+    }
+
     private void compute(int y0, int x0, int y1, int x1) {
         // Инициализация карты
         initializeMap();
@@ -121,20 +136,5 @@ public class AStarSolver implements Solver {
         for (int i = 0; i < ps; i++) {
             path.add(new Coordinate(pyPath.get(i), pxPath.get(i)));
         }
-    }
-
-    public void initializeMap(Maze maze) {
-        int xs = maze.width();
-        int ys = maze.height();
-        map = new int[ys][xs];
-
-        for (int y = 0; y < ys; y++) {
-            for (int x = 0; x < xs; x++) {
-                // Set INF for walls, 0 for free spaces
-                map[y][x] = maze.getCell(y, x).type() == Cell.Type.WALL ? INF : 0;
-            }
-        }
-
-        path = new ArrayList<>();
     }
 }
