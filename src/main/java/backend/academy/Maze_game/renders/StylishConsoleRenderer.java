@@ -26,7 +26,11 @@ public class StylishConsoleRenderer implements Renderer {
             // Row content
             sb.append('|');
             for (int col = 0; col < maze.width(); col++) {
-                if (maze.getCell(row, col).type() == Cell.Type.WALL) {
+                if (maze.getCell(row, col).type() == Cell.Type.START) {
+                    sb.append(STARTPOINT); // Start point
+                } else if (maze.getCell(row, col).type() == Cell.Type.END) {
+                    sb.append(ENDPOINT); // End point
+                } else if (maze.getCell(row, col).type() == Cell.Type.WALL) {
                     sb.append(WALL);
                 } else {
                     sb.append(SPACE);

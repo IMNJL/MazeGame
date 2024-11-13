@@ -2,7 +2,7 @@ package backend.academy.Maze_game.utility;
 
 public enum Elements {
     BORDER("---+"),
-    WALL(" # |"),
+    WALL("###|"),
     SPACE("   |"),
     PATH("<*>|"),
     STARTPOINT(" A |"),

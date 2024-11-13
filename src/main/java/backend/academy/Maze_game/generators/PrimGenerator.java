@@ -33,6 +33,7 @@ public class PrimGenerator implements Generator {
         // Назначаем точки старта и конца
         maze.start(start);
         maze.end(end);
+        generateMazeWithStartEnd(maze, start, end);
 
         return maze;
     }
@@ -58,6 +59,12 @@ public class PrimGenerator implements Generator {
             }
         }
     }
+
+    private void generateMazeWithStartEnd(Maze maze, Coordinate start, Coordinate end) {
+        maze.setCell(start.row(), start.col(), Cell.Type.START);
+        maze.setCell(end.row(), end.col(), Cell.Type.END);
+    }
+
 
     private void addWalls(List<Coordinate> walls, Maze maze, int row, int col) {
         for (List<Integer> direction : DIRECTIONS) {

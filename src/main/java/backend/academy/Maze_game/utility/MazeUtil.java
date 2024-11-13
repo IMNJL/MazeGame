@@ -19,6 +19,8 @@ import org.slf4j.LoggerFactory;
 @UtilityClass
 public class MazeUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MazeUtil.class);
+    private static final int ASTAR = 1;
+    private static final int DIJKSTRA = 2;
     private static final int BFS = 3;
     private static final int DFS = 4;
 
@@ -52,8 +54,8 @@ public class MazeUtil {
         LOGGER.info("Выберите алгоритм поиска пути: 1 - A*, 2 - Дейкстра, 3 - BFS, 4 - DFS");
         int solverChoice = sc.nextInt();
         return switch (solverChoice) {
-            case 1 -> new AStarSolver(); // A* алгоритм
-            case 2 -> new DijkstraSolver(); // Дейкстра
+            case ASTAR -> new AStarSolver(); // A* алгоритм
+            case DIJKSTRA -> new DijkstraSolver(); // Дейкстра
             case BFS -> new BFSSolver(); // BFS
             case DFS -> new DFSSolver(); // DFS
             default -> {
@@ -79,9 +81,10 @@ public class MazeUtil {
 
         // Генерация лабиринта с точками старта и конца
         maze = generator.generate(maze, start, end);
+        Renderer renderer1 = new StylishConsoleRenderer();
 
         // Отображение лабиринта с точками старта и конца
-        LOGGER.info("Maze with start and end points:\n{}", renderer.render(maze));
+        LOGGER.info("Maze with start and end points:\n{}", renderer1.render(maze));
 
         return maze;
     }
