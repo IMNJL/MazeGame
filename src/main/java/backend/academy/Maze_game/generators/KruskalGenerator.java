@@ -1,22 +1,43 @@
 package backend.academy.Maze_game.generators;
 
+import backend.academy.Maze_game.renders.Renderer;
+import backend.academy.Maze_game.renders.StylishConsoleRenderer;
 import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Scanner;
+import static backend.academy.Maze_game.utility.MazeUtil.getCoordinateFromUser;
 
-public class KruskalGenerator implements Generator {
+public class KruskalGenerator extends BasicGenerator implements Generator {
     private int[][] parent; // Для реализации структуры объединения с поиском (Union-Find)
     private final SecureRandom random = new SecureRandom();
 
+
     @Override
     public Maze generate(int height, int width) {
-        Maze maze = new Maze(height, width);
+        if (height <= 0 || width <= 0) {
+            throw new IllegalArgumentException("Maze dimensions must be positive");
+        }
 
+        Maze maze = getMaze(height, width);
+
+        return maze;
+    }
+
+    @Override
+    public void generateMazeWithoutStartEnd(Maze maze) {
         // Заполнение лабиринта стенами
+        int height = maze.height();
+        int width = maze.width();
         for (int row = 0; row < height; row++) {
             for (int col = 0; col < width; col++) {
                 maze.setCell(row, col, Cell.Type.WALL);
@@ -34,8 +55,6 @@ public class KruskalGenerator implements Generator {
 
         // Создание списка рёбер (стен) между проходами
         List<Edge> edges = getEdges(height, width);
-
-        // Перемешиваем рёбра для случайного выбора
         Collections.shuffle(edges, random);
 
         // Обрабатываем рёбра для построения лабиринта
@@ -48,8 +67,11 @@ public class KruskalGenerator implements Generator {
                 maze.setCell((edge.row1() + edge.row2()) / 2, (edge.col1() + edge.col2()) / 2, Cell.Type.PASSAGE);
             }
         }
+    }
 
-        return maze;
+    public void generateMazeWithStartEnd(Maze maze, Coordinate start, Coordinate end) {
+        maze.setCell(start.row(), start.col(), Cell.Type.START);
+        maze.setCell(end.row(), end.col(), Cell.Type.END);
     }
 
     private static List<Edge> getEdges(int height, int width) {
@@ -65,19 +87,6 @@ public class KruskalGenerator implements Generator {
             }
         }
         return edges;
-    }
-
-    @Override
-    public Maze generate(Maze maze, Coordinate start, Coordinate end) {
-        if (start == null || end == null) {
-            throw new IllegalArgumentException("Start or end coordinates cannot be null");
-        }
-
-        // Установка точки начала (A) и точки конца (B)
-        maze.start(start);
-        maze.end(end);
-
-        return maze;
     }
 
     // Находит корень для данной клетки (с использованием сжатия пути)

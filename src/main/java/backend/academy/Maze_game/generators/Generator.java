@@ -5,7 +5,6 @@ import backend.academy.Maze_game.utility.Maze;
 
 public interface Generator {
     Maze generate(int height, int width);
-
-    Maze generate(Maze maze, Coordinate start, Coordinate end);
-
+    Maze getMaze(int height, int width);
+    void generateMazeWithoutStartEnd(Maze maze);
 }
