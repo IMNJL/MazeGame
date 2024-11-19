@@ -14,12 +14,12 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class BFSSolver implements Solver {
-    private static final Logger LOGGER = LoggerFactory.getLogger(BFSSolver.class);
 
     @Getter private int[][] distances;
+    private static final Logger LOGGER = LoggerFactory.getLogger(BFSSolver.class);
 
-    private int xs;
-    private int ys;
+    private static int xs;
+    private static int ys;
     List<Coordinate> path;
 
     @Override
@@ -64,7 +64,7 @@ public class BFSSolver implements Solver {
         LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    private boolean isValid(Maze maze, int row, int col) {
+    static boolean isValid(Maze maze, int row, int col) {
         return row >= 0 && row < ys && col >= 0 && col < xs && maze.grid()[row][col].type() != Cell.Type.WALL;
     }
 

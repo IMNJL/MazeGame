@@ -1,6 +1,5 @@
 package backend.academy.Maze_game.solvers;
 
-import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
@@ -18,17 +17,18 @@ public class DijkstraSolver implements Solver {
 
     @Getter private int[][] distances;
 
-    private int xs;
-    private int ys;
+    private int xS;
+
     List<Coordinate> path;
+    private int yS;
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
-        xs = maze.width();
-        ys = maze.height();
-        distances = new int[ys][xs];
+        xS = maze.width();
+        yS = maze.height();
+        distances = new int[yS][xS];
 
-        for (int y = 0; y < ys; y++) {
+        for (int y = 0; y < yS; y++) {
             Arrays.fill(distances[y], Integer.MAX_VALUE);
         }
 
@@ -50,24 +50,24 @@ public class DijkstraSolver implements Solver {
                 return;
             }
 
-            for (Direction direction : Direction.values()) {
-                int newRow = current.row + direction.dy();
-                int newCol = current.col + direction.dx();
-
-                if (isValid(maze, newRow, newCol)) {
-                    int newCost = current.cost + 1; // Uniform cost
-                    if (newCost < distances[newRow][newCol]) {
-                        distances[newRow][newCol] = newCost;
-                        queue.add(new Node(newRow, newCol, newCost));
-                    }
-                }
-            }
+            someMethod(maze, current, queue);
         }
         LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    private boolean isValid(Maze maze, int row, int col) {
-        return row >= 0 && row < ys && col >= 0 && col < xs && maze.grid()[row][col].type() != Cell.Type.WALL;
+    private void someMethod(Maze maze, Node current, PriorityQueue<Node> queue) {
+        for (Direction direction : Direction.values()) {
+            int newRow = current.row + direction.dy();
+            int newCol = current.col + direction.dx();
+
+            if (BFSSolver.isValid(maze, newRow, newCol)) {
+                int newCost = current.cost + 1; // Uniform cost
+                if (newCost < distances[newRow][newCol]) {
+                    distances[newRow][newCol] = newCost;
+                    queue.add(new Node(newRow, newCol, newCost));
+                }
+            }
+        }
     }
 
     private void buildPath(Coordinate end) {
@@ -81,8 +81,8 @@ public class DijkstraSolver implements Solver {
                 int prevRow = row - direction.dy();
                 int prevCol = col - direction.dx();
 
-                if (prevRow >= 0 && prevRow < ys && prevCol >= 0
-                    && prevCol < xs && distances[prevRow][prevCol] == distances[row][col] - 1) {
+                if (prevRow >= 0 && prevRow < yS && prevCol >= 0
+                    && prevCol < xS && distances[prevRow][prevCol] == distances[row][col] - 1) {
                     row = prevRow;
                     col = prevCol;
                     break;
