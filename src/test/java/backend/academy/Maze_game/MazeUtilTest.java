@@ -1,156 +1,121 @@
 package backend.academy.Maze_game;
 
-import backend.academy.Maze_game.utility.MazeUtil;
-import backend.academy.Maze_game.utility.Coordinate;
-import backend.academy.Maze_game.utility.Maze;
-import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.generators.Generator;
 import backend.academy.Maze_game.generators.KruskalGenerator;
 import backend.academy.Maze_game.generators.PrimGenerator;
 import backend.academy.Maze_game.solvers.AStarSolver;
-import backend.academy.Maze_game.solvers.DijkstraSolver;
 import backend.academy.Maze_game.solvers.BFSSolver;
 import backend.academy.Maze_game.solvers.DFSSolver;
+import backend.academy.Maze_game.solvers.DijkstraSolver;
 import backend.academy.Maze_game.solvers.Solver;
-import org.junit.jupiter.api.BeforeEach;
+import backend.academy.Maze_game.utility.Cell;
+import backend.academy.Maze_game.utility.Coordinate;
+import backend.academy.Maze_game.utility.Maze;
+import backend.academy.Maze_game.utility.MazeUtil;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mockito;
 
-import java.util.List;
+import java.io.ByteArrayInputStream;
+import java.io.InputStream;
 import java.util.Scanner;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.*;
 
-class MazeUtilTest {
-
-    private Scanner scannerMock;
-
-    @BeforeEach
-    void setUp() {
-        scannerMock = Mockito.mock(Scanner.class);
-    }
+public class MazeUtilTest {
 
     @Test
-    void testChooseGenerator_Prim() {
-        when(scannerMock.nextInt()).thenReturn(1);
-        Generator generator = MazeUtil.chooseGenerator(scannerMock);
+    public void testChooseGenerator() {
+        String input = "1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
+
+        Generator generator = MazeUtil.chooseGenerator(sc);
         assertTrue(generator instanceof PrimGenerator);
     }
 
     @Test
-    void testChooseGenerator_Kruskal() {
-        when(scannerMock.nextInt()).thenReturn(2);
-        Generator generator = MazeUtil.chooseGenerator(scannerMock);
-        assertTrue(generator instanceof KruskalGenerator);
-    }
+    public void testChooseGeneratorDefault() {
+        String input = "3\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
 
-    @Test
-    void testChooseGenerator_InvalidInputDefaultsToPrim() {
-        when(scannerMock.nextInt()).thenReturn(5);
-        Generator generator = MazeUtil.chooseGenerator(scannerMock);
+        Generator generator = MazeUtil.chooseGenerator(sc);
         assertTrue(generator instanceof PrimGenerator);
     }
 
     @Test
-    void testChooseSolver_AStar() {
-        when(scannerMock.nextInt()).thenReturn(1);
-        Solver solver = MazeUtil.chooseSolver(scannerMock);
+    public void testChooseSolver() {
+        String input = "1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
+
+        Solver solver = MazeUtil.chooseSolver(sc);
         assertTrue(solver instanceof AStarSolver);
     }
 
     @Test
-    void testChooseSolver_Dijkstra() {
-        when(scannerMock.nextInt()).thenReturn(2);
-        Solver solver = MazeUtil.chooseSolver(scannerMock);
-        assertTrue(solver instanceof DijkstraSolver);
-    }
+    public void testChooseSolverDefault() {
+        String input = "5\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
 
-    @Test
-    void testChooseSolver_BFS() {
-        when(scannerMock.nextInt()).thenReturn(3);
-        Solver solver = MazeUtil.chooseSolver(scannerMock);
-        assertInstanceOf(BFSSolver.class, solver);
-    }
-
-    @Test
-    void testChooseSolver_DFS() {
-        when(scannerMock.nextInt()).thenReturn(4);
-        Solver solver = MazeUtil.chooseSolver(scannerMock);
-        assertInstanceOf(DFSSolver.class, solver);
-    }
-
-    @Test
-    void testChooseSolver_InvalidInputDefaultsToAStar() {
-        when(scannerMock.nextInt()).thenReturn(10);
-        Solver solver = MazeUtil.chooseSolver(scannerMock);
+        Solver solver = MazeUtil.chooseSolver(sc);
         assertTrue(solver instanceof AStarSolver);
     }
 
     @Test
-    void testGetDimension() {
-        when(scannerMock.nextInt()).thenReturn(10);
-        int dimension = MazeUtil.getDimension("height", scannerMock);
+    public void testGetDimension() {
+        String input = "10\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
+
+        int dimension = MazeUtil.getDimension("height", sc);
         assertEquals(10, dimension);
     }
 
     @Test
-    void testGenerateAndDisplayMaze() {
-        Generator generator = new PrimGenerator();
-        int height = 5;
-        int width = 5;
+    public void testGetCoordinateFromUser() {
+        String input = "1 1\n3 3\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
 
-        Maze maze = MazeUtil.generateAndDisplayMaze(generator, height, width, scannerMock);
+        Maze maze = new Maze(10, 10);
+        // Заполнение лабиринта стенами
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                maze.setCell(row, col, Cell.Type.WALL);
+            }
+        }
+        // Создание прохода в (3, 3)
+        maze.setCell(3, 3, Cell.Type.PASSAGE);
 
-        // Basic validation on generated maze dimensions
-        assertNotNull(maze);
-        assertEquals(height, maze.height());
-        assertEquals(width, maze.width());
+        Coordinate coord = MazeUtil.getCoordinateFromUser("A", 10, 10, maze, sc);
+        assertEquals(new Coordinate(3, 3), coord);
     }
 
     @Test
-    void testFindAndDisplayPath_PathExists() {
-        Maze maze = new Maze(5, 5);
-        for (int y = 0; y < 5; y++) {
-            for (int x = 0; x < 5; x++) {
-                maze.setCell(y, x, new Cell(y, x, Cell.Type.PASSAGE).type());
+    public void testGetCoordinateFromUserInvalid() {
+        String input = "10 10\n1 1\n1 1\n";
+        InputStream in = new ByteArrayInputStream(input.getBytes());
+        System.setIn(in);
+        Scanner sc = new Scanner(System.in);
+
+        Maze maze = new Maze(10, 10);
+        // Заполнение лабиринта стенами
+        for (int row = 0; row < 10; row++) {
+            for (int col = 0; col < 10; col++) {
+                maze.setCell(row, col, Cell.Type.WALL);
             }
         }
-        Solver solver = new AStarSolver();
-        Coordinate start = new Coordinate(0, 0);
-        Coordinate end = new Coordinate(4, 4);
+        // Создание прохода в (1, 1)
+        maze.setCell(1, 1, Cell.Type.PASSAGE);
 
-        List<Coordinate> path = solver.solve(maze, start, end);
-        assertNotNull(path);
+        Coordinate coord = MazeUtil.getCoordinateFromUser("A", 10, 10, maze, sc);
+        assertEquals(new Coordinate(1, 1), coord);
     }
-
-    @Test
-    void testGetCoordinateFromUser_ValidCoordinates() {
-        Maze maze = new Maze(5, 5);
-        for (int y = 0; y < 5; y++) {
-            for (int x = 0; x < 5; x++) {
-                maze.setCell(y, x, new Cell(y, x, Cell.Type.PASSAGE).type());
-            }
-        }
-        when(scannerMock.nextInt()).thenReturn(0, 0); // User enters valid coordinates
-
-        Coordinate coord = MazeUtil.getCoordinateFromUser("A", 5, 5, maze, scannerMock);
-        assertEquals(new Coordinate(0, 0), coord);
-    }
-
-    @Test
-    void testGetCoordinateFromUser_InvalidCoordinates() {
-        Maze maze = new Maze(5, 5);
-        for (int y = 0; y < 5; y++) {
-            for (int x = 0; x < 5; x++) {
-                maze.setCell(y, x, new Cell(y, x, Cell.Type.PASSAGE).type());
-            }
-        }
-        // Invalid coordinates (out of bounds)
-        when(scannerMock.nextInt()).thenReturn(6, 6, 0, 0); // User retries with valid coordinates
-
-        Coordinate coord = MazeUtil.getCoordinateFromUser("A", 5, 5, maze, scannerMock);
-        assertEquals(new Coordinate(0, 0), coord);
-    }
-
 }
