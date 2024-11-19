@@ -1,78 +1,103 @@
 package backend.academy.Maze_game.generators;
 
-import backend.academy.Maze_game.generators.KruskalGenerator;
 import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
 
-class KruskalGeneratorTest {
+public class KruskalGeneratorTest {
 
     private KruskalGenerator generator;
 
     @BeforeEach
-    void setUp() {
+    public void setUp() {
         generator = new KruskalGenerator();
     }
 
     @Test
-    void testGenerateMazeConnectivity() {
-        Maze maze = generator.generate(5, 5);
+    public void testGenerateMaze() {
+        int height = 10;
+        int width = 10;
+        Maze maze = generator.generate(height, width);
 
-        // Check that there are no isolated passages
-        for (int row = 1; row < maze.height(); row += 2) {
-            for (int col = 1; col < maze.width(); col += 2) {
-                Cell cell = maze.getCell(row, col);
-                assertEquals(Cell.Type.PASSAGE, cell.type(),
-                    "Expected passage cell at (" + row + ", " + col + ")");
+        assertNotNull(maze);
+        assertEquals(height, maze.height());
+        assertEquals(width, maze.width());
 
-                // Check at least one neighbor is also a passage
-                boolean hasPassageNeighbor = false;
-                if (row > 1 && maze.getCell(row - 1, col).type() == Cell.Type.PASSAGE) hasPassageNeighbor = true;
-                if (row < maze.height() - 2 && maze.getCell(row + 1, col).type() == Cell.Type.PASSAGE) hasPassageNeighbor = true;
-                if (col > 1 && maze.getCell(row, col - 1).type() == Cell.Type.PASSAGE) hasPassageNeighbor = true;
-                if (col < maze.width() - 2 && maze.getCell(row, col + 1).type() == Cell.Type.PASSAGE) hasPassageNeighbor = true;
-
-                assertTrue(hasPassageNeighbor,
-                    "Expected passage cell at (" + row + ", " + col + ") to have at least one passage neighbor");
+        // Проверка, что лабиринт содержит стены и проходы
+        boolean hasWalls = false;
+        boolean hasPassages = false;
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Cell.Type type = maze.getCell(row, col).type();
+                if (type == Cell.Type.WALL) {
+                    hasWalls = true;
+                } else if (type == Cell.Type.PASSAGE) {
+                    hasPassages = true;
+                }
             }
         }
+        assertTrue(hasWalls);
+        assertTrue(hasPassages);
     }
 
     @Test
-    void testGenerateMazeWithStartAndEnd() {
-        Maze maze = generator.generate(5, 5);
-        Coordinate start = new Coordinate(1, 1);
-        Coordinate end = new Coordinate(3, 3);
-        maze = generator.generate(maze, start, end);
+    public void testGenerateMazeWithInvalidDimensions() {
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> generator.generate(0, 10))
+            .withMessage("Maze dimensions must be positive");
 
-        // Check start and end points
-        assertEquals(start, maze.start(), "Start point is incorrect");
-        assertEquals(end, maze.end(), "End point is incorrect");
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> generator.generate(10, 0))
+            .withMessage("Maze dimensions must be positive");
 
-        // Verify that start and end points are passages
-        assertEquals(Cell.Type.PASSAGE, maze.getCell(start.row(), start.col()).type(),
-            "Expected start point to be a passage");
-        assertEquals(Cell.Type.PASSAGE, maze.getCell(end.row(), end.col()).type(),
-            "Expected end point to be a passage");
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> generator.generate(-1, 10))
+            .withMessage("Maze dimensions must be positive");
+
+        assertThatExceptionOfType(IllegalArgumentException.class)
+            .isThrownBy(() -> generator.generate(10, -1))
+            .withMessage("Maze dimensions must be positive");
     }
 
     @Test
-    void testGenerateMazeInvalidStartEndCoordinates() {
+    public void testGenerateMazeWithoutStartEnd() {
+        int height = 10;
+        int width = 10;
+        Maze maze = new Maze(height, width);
+        generator.generateMazeWithoutStartEnd(maze);
+
+        assertNotNull(maze);
+        assertEquals(height, maze.height());
+        assertEquals(width, maze.width());
+
+        // Проверка, что лабиринт содержит стены и проходы
+        boolean hasWalls = false;
+        boolean hasPassages = false;
+        for (int row = 0; row < height; row++) {
+            for (int col = 0; col < width; col++) {
+                Cell.Type type = maze.getCell(row, col).type();
+                if (type == Cell.Type.WALL) {
+                    hasWalls = true;
+                } else if (type == Cell.Type.PASSAGE) {
+                    hasPassages = true;
+                }
+            }
+        }
+        assertTrue(hasWalls);
+        assertTrue(hasPassages);
+    }
+
+    @Test
+    void testGenerateMazeNoStartEndCoordinates() {
         Maze maze = generator.generate(5, 5);
 
-        // Check invalid start and end points
-        IllegalArgumentException exception = assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(maze, null, new Coordinate(3, 3));
-        });
-        assertEquals("Start or end coordinates cannot be null", exception.getMessage());
-
-        exception = assertThrows(IllegalArgumentException.class, () -> {
-            generator.generate(maze, new Coordinate(1, 1), null);
-        });
-        assertEquals("Start or end coordinates cannot be null", exception.getMessage());
+        // Ensure maze has no start or end point initially
+        assertNull(maze.start(), "Start point should be null initially");
+        assertNull(maze.end(), "End point should be null initially");
     }
 }

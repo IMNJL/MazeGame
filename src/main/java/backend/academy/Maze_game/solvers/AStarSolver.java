@@ -6,19 +6,20 @@ import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
 import java.util.ArrayList;
 import java.util.List;
+import lombok.Getter;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 public class AStarSolver implements Solver {
     private static final Logger LOGGER = LoggerFactory.getLogger(AStarSolver.class);
-    private static final int A_STAR_SPACE = Integer.MAX_VALUE;
-    private static final int A_STAR_WALL = Integer.MAX_VALUE - 1;
+    @Getter private static final int A_STAR_SPACE = Integer.MAX_VALUE;
+    @Getter private static final int A_STAR_WALL = Integer.MAX_VALUE - 1;
 
-    private int[][] map;
+    @Getter private int[][] map;
 
     private int xs;
     private int ys;
-    private List<Coordinate> path;
+    List<Coordinate> path;
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
@@ -104,7 +105,7 @@ public class AStarSolver implements Solver {
         return false;
     }
 
-    private void buildPath(int y1, int x1) {
+    void buildPath(int y1, int x1) {
         int ps = map[y1][x1] + 1;
         List<Integer> pxPath = new ArrayList<>(ps); // Pre-sizing
         List<Integer> pyPath = new ArrayList<>(ps); // Pre-sizing

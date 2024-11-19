@@ -6,22 +6,15 @@ import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
-import java.io.InputStreamReader;
-import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Scanner;
-import com.google.common.base.Utf8;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import static backend.academy.Maze_game.utility.MazeUtil.getCoordinateFromUser;
 
 public class PrimGenerator extends BasicGenerator implements Generator {
     private static final Logger LOGGER = LoggerFactory.getLogger(PrimGenerator.class);
     private static final SecureRandom RANDOM = new SecureRandom();
-    private Scanner sc = new Scanner(new InputStreamReader(System.in, StandardCharsets.UTF_8));
 
     @Override
     public Maze generate(int height, int width) {
@@ -29,10 +22,12 @@ public class PrimGenerator extends BasicGenerator implements Generator {
             throw new IllegalArgumentException("Maze dimensions must be positive");
         }
 
-        Maze maze = getMaze(height, width);
-
+        // Создаём лабиринт без начальной и конечной точек
+        Maze maze = new Maze(height, width);
+        generateMazeWithoutStartEnd(maze);
         return maze;
     }
+
 
     @Override
     public void generateMazeWithoutStartEnd(Maze maze) {
@@ -57,11 +52,13 @@ public class PrimGenerator extends BasicGenerator implements Generator {
         }
     }
 
+    @Override
     public void generateMazeWithStartEnd(Maze maze, Coordinate start, Coordinate end) {
         maze.setCell(start.row(), start.col(), Cell.Type.START);
         maze.setCell(end.row(), end.col(), Cell.Type.END);
+        Renderer renderer = new StylishConsoleRenderer();
+        LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
     }
-
 
     private void addWalls(List<Coordinate> walls, Maze maze, int row, int col) {
         for (List<Integer> direction : DIRECTIONS) {

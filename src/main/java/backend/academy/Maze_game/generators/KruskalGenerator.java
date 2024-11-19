@@ -5,30 +5,27 @@ import backend.academy.Maze_game.renders.StylishConsoleRenderer;
 import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.io.InputStreamReader;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
-import static backend.academy.Maze_game.utility.MazeUtil.getCoordinateFromUser;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class KruskalGenerator extends BasicGenerator implements Generator {
     private int[][] parent; // Для реализации структуры объединения с поиском (Union-Find)
     private final SecureRandom random = new SecureRandom();
-
+    private static final Logger LOGGER = LoggerFactory.getLogger(KruskalGenerator.class);
 
     @Override
     public Maze generate(int height, int width) {
         if (height <= 0 || width <= 0) {
             throw new IllegalArgumentException("Maze dimensions must be positive");
         }
-
-        Maze maze = getMaze(height, width);
+        Maze maze = new Maze(height, width);
+        generateMazeWithoutStartEnd(maze);
+        Renderer renderer = new StylishConsoleRenderer();
+        LOGGER.info("Maze without start and end points:\n{}", renderer.render(maze));
 
         return maze;
     }
@@ -69,9 +66,12 @@ public class KruskalGenerator extends BasicGenerator implements Generator {
         }
     }
 
+    @Override
     public void generateMazeWithStartEnd(Maze maze, Coordinate start, Coordinate end) {
         maze.setCell(start.row(), start.col(), Cell.Type.START);
         maze.setCell(end.row(), end.col(), Cell.Type.END);
+        Renderer renderer = new StylishConsoleRenderer();
+        LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
     }
 
     private static List<Edge> getEdges(int height, int width) {
