@@ -1,93 +1,107 @@
 package backend.academy.Maze_game.solvers;
 
+import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
 import java.util.ArrayList;
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 import java.util.PriorityQueue;
+import lombok.Getter;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 public class DijkstraSolver implements Solver {
-    private static final int INF = Integer.MAX_VALUE;
-    private int[][] map;
+    private static final Logger LOGGER = LoggerFactory.getLogger(DijkstraSolver.class);
+
+    @Getter private int[][] distances;
+
     private int xs;
     private int ys;
-    private List<Coordinate> path;
+    List<Coordinate> path;
 
     @Override
     public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
         xs = maze.width();
         ys = maze.height();
-        map = new int[ys][xs];
+        distances = new int[ys][xs];
 
         for (int y = 0; y < ys; y++) {
-            for (int x = 0; x < xs; x++) {
-                map[y][x] = INF;
-            }
+            Arrays.fill(distances[y], Integer.MAX_VALUE);
         }
 
         path = new ArrayList<>();
-        return compute(start.row(), start.col(), end.row(), end.col());
+        compute(maze, start, end);
+        return path;
     }
 
-    private List<Coordinate> compute(int y0, int x0, int y1, int x1) {
-        PriorityQueue<Node> pq = new PriorityQueue<>(Comparator.comparingInt(node -> node.distance));
-        map[y0][x0] = 0;
-        pq.add(new Node(x0, y0, 0));
+    private void compute(Maze maze, Coordinate start, Coordinate end) {
+        PriorityQueue<Node> queue = new PriorityQueue<>(Comparator.comparingInt(node -> node.cost));
+        queue.add(new Node(start.row(), start.col(), 0));
+        distances[start.row()][start.col()] = 0;
 
-        while (!pq.isEmpty()) {
-            Node current = pq.poll();
+        while (!queue.isEmpty()) {
+            Node current = queue.poll();
 
-            if (current.y == y1 && current.x == x1) {
-                buildPath(y1, x1);
-                return path;
+            if (current.row == end.row() && current.col == end.col()) {
+                buildPath(end);
+                return;
             }
 
             for (Direction direction : Direction.values()) {
-                int newX = current.x + direction.dx();
-                int newY = current.y + direction.dy();
+                int newRow = current.row + direction.dy();
+                int newCol = current.col + direction.dx();
 
-                if (0 <= newX && newX < xs && 0 <= newY && newY < ys && map[newY][newX] == INF) {
-                    map[newY][newX] = current.distance + 1;
-                    pq.add(new Node(newX, newY, map[newY][newX]));
+                if (isValid(maze, newRow, newCol)) {
+                    int newCost = current.cost + 1; // Uniform cost
+                    if (newCost < distances[newRow][newCol]) {
+                        distances[newRow][newCol] = newCost;
+                        queue.add(new Node(newRow, newCol, newCost));
+                    }
                 }
             }
         }
-
-        return new ArrayList<>();
+        LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    private void buildPath(int y1, int x1) {
-        // Similar to A* path reconstruction
-        int x = x1;
-        int y = y1;
-        while (map[y][x] != 0) {
-            path.add(new Coordinate(y, x));
+    private boolean isValid(Maze maze, int row, int col) {
+        return row >= 0 && row < ys && col >= 0 && col < xs && maze.grid()[row][col].type() != Cell.Type.WALL;
+    }
+
+    private void buildPath(Coordinate end) {
+        int row = end.row();
+        int col = end.col();
+
+        while (distances[row][col] != 0) {
+            path.add(0, new Coordinate(row, col));
+
             for (Direction direction : Direction.values()) {
-                int newX = x + direction.dx();
-                int newY = y + direction.dy();
-                if (0 <= newX && newX < xs && 0 <= newY && newY < ys && map[newY][newX] == map[y][x] - 1) {
-                    x = newX;
-                    y = newY;
+                int prevRow = row - direction.dy();
+                int prevCol = col - direction.dx();
+
+                if (prevRow >= 0 && prevRow < ys && prevCol >= 0
+                    && prevCol < xs && distances[prevRow][prevCol] == distances[row][col] - 1) {
+                    row = prevRow;
+                    col = prevCol;
                     break;
                 }
             }
         }
-        path.add(new Coordinate(y, x));
-        Collections.reverse(path);
+
+        path.add(0, new Coordinate(row, col));
     }
 
     private static class Node {
-        int x;
-        int y;
-        int distance;
+        int row;
+        int col;
+        int cost;
 
-        Node(int x, int y, int distance) {
-            this.x = x;
-            this.y = y;
-            this.distance = distance;
+        Node(int row, int col, int cost) {
+            this.row = row;
+            this.col = col;
+            this.cost = cost;
         }
     }
 }

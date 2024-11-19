@@ -19,10 +19,6 @@ import org.slf4j.LoggerFactory;
 @UtilityClass
 public class MazeUtil {
     private static final Logger LOGGER = LoggerFactory.getLogger(MazeUtil.class);
-    private static final int ASTAR = 1;
-    private static final int DIJKSTRA = 2;
-    private static final int BFS = 3;
-    private static final int DFS = 4;
 
     public static void runMazeGame(Scanner sc) {
         Generator generator = chooseGenerator(sc);
@@ -30,7 +26,14 @@ public class MazeUtil {
         int width = getDimension("width", sc);
 
         // Генерация лабиринта и его отображение
-        Maze maze = generateAndDisplayMaze(generator, height, width, sc);
+        Maze maze = generateAndDisplayMaze(generator, height, width);
+
+        Coordinate start = getCoordinateFromUser("A", height, width, maze, sc);
+        Coordinate end = getCoordinateFromUser("B", height, width, maze, sc);
+        maze.start(start);
+        maze.end(end);
+
+        generator.generateMazeWithStartEnd(maze, start, end);
 
         // Поиск пути и его отображение
         Solver solver  = chooseSolver(sc);
@@ -53,15 +56,17 @@ public class MazeUtil {
     public static Solver chooseSolver(Scanner sc) {
         LOGGER.info("Выберите алгоритм поиска пути: 1 - A*, 2 - Дейкстра, 3 - BFS, 4 - DFS");
         int solverChoice = sc.nextInt();
-        return switch (solverChoice) {
-            case ASTAR -> new AStarSolver(); // A* алгоритм
+        if (solverChoice < 1 || solverChoice > SolverType.values().length) {
+            LOGGER.warn("Некорректный ввод, выбран A* по умолчанию.");
+            return new AStarSolver(); // Возвращаем A* по умолчанию
+        }
+
+        SolverType type = SolverType.values()[solverChoice - 1];
+        return switch (type) {
+            case ASTAR -> new AStarSolver();     // A* алгоритм
             case DIJKSTRA -> new DijkstraSolver(); // Дейкстра
-            case BFS -> new BFSSolver(); // BFS
-            case DFS -> new DFSSolver(); // DFS
-            default -> {
-                LOGGER.info("Некорректный ввод, выбран A* по умолчанию.");
-                yield new AStarSolver(); // Если выбор неверный, по умолчанию A*
-            }
+            case BFS -> new BFSSolver();         // BFS
+            case DFS -> new DFSSolver();         // DFS
         };
     }
 
@@ -70,21 +75,10 @@ public class MazeUtil {
         return sc.nextInt();
     }
 
-    public static Maze generateAndDisplayMaze(Generator generator, int height, int width, Scanner sc) {
+    public static Maze generateAndDisplayMaze(Generator generator, int height, int width) {
         Maze maze = generator.generate(height, width); // Генерация лабиринта без точек начала и конца
         Renderer renderer = new StylishConsoleRenderer();
         LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
-
-        // Запрос координат для начала и конца
-        Coordinate start = getCoordinateFromUser("A", height, width, maze, sc);
-        Coordinate end = getCoordinateFromUser("B", height, width, maze, sc);
-
-        // Генерация лабиринта с точками старта и конца
-        maze = generator.generate(maze, start, end);
-        Renderer renderer1 = new StylishConsoleRenderer();
-
-        // Отображение лабиринта с точками старта и конца
-        LOGGER.info("Maze with start and end points:\n{}", renderer1.render(maze));
 
         return maze;
     }
