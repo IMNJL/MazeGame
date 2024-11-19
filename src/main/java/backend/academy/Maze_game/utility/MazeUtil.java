@@ -74,6 +74,13 @@ public class MazeUtil {
         Maze maze = generator.generate(height, width); // Генерация лабиринта без точек начала и конца
         Renderer renderer = new StylishConsoleRenderer();
         LOGGER.info("Generated maze without start and end points:\n{}", renderer.render(maze));
+
+        // Запрос координат для начала и конца
+        Coordinate start = getCoordinateFromUser("A", height, width, maze, sc);
+        Coordinate end = getCoordinateFromUser("B", height, width, maze, sc);
+
+        // Генерация лабиринта с точками старта и конца
+        maze = generator.generate(maze, start, end);
         Renderer renderer1 = new StylishConsoleRenderer();
 
         // Отображение лабиринта с точками старта и конца
