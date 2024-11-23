@@ -29,8 +29,11 @@ class DFSSolverTest {
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(4, 4);
 
+        maze.start(start);
+        maze.end(end);
+
         // Create a DFS solver instance and solve the maze
-        List<Coordinate> path = solver.solve(maze, start, end);
+        List<Coordinate> path = solver.solve(maze);
 
         // Assert that the path is not empty
         assertTrue(path.isEmpty(), "Path should not be empty");
@@ -49,7 +52,10 @@ class DFSSolverTest {
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(4, 4);
 
-        List<Coordinate> path = solver.solve(maze, start, end);
+        maze.start(start);
+        maze.end(end);
+
+        List<Coordinate> path = solver.solve(maze);
 
         // Assert that the path is empty (no path found)
         assertTrue(path.isEmpty(), "Path should be empty when there is no path between start and end");
@@ -65,7 +71,10 @@ class DFSSolverTest {
         Coordinate start = new Coordinate(0, 0);
         Coordinate end = new Coordinate(0, 0);
 
-        List<Coordinate> path = solver.solve(maze, start, end);
+        maze.start(start);
+        maze.end(end);
+
+        List<Coordinate> path = solver.solve(maze);
 
         // Assert that the path is just the start point
         assertEquals(1, path.size(), "Path should contain only the start point");
@@ -85,7 +94,10 @@ class DFSSolverTest {
         maze.setCell(0, 0, Cell.Type.WALL);
         maze.setCell(4, 4, Cell.Type.WALL);
 
-        List<Coordinate> path = solver.solve(maze, start, end);
+        maze.start(start);
+        maze.end(end);
+
+        List<Coordinate> path = solver.solve(maze);
 
         // Assert that no path is found because start or end are walls
         assertTrue(path.isEmpty(), "Path should be empty when start or end are walls");

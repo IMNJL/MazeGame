@@ -22,7 +22,10 @@ public class AStarSolver implements Solver {
     List<Coordinate> path;
 
     @Override
-    public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+    public List<Coordinate> solve(Maze maze) {
+        Coordinate start = maze.start();
+        Coordinate end = maze.end();
+
         xs = maze.width();
         ys = maze.height();
         map = new int[ys][xs];

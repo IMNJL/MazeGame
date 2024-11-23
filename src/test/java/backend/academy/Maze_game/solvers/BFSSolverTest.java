@@ -28,7 +28,9 @@ public class BFSSolverTest {
 
     @Test
     public void testSolvePathFound() {
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
+        List<Coordinate> path = solver.solve(maze);
 
         assertThat(path)
             .isNotEmpty()
@@ -45,14 +47,19 @@ public class BFSSolverTest {
         maze.grid()[2][3] = new Cell(2, 3, Cell.Type.WALL);
         maze.grid()[3][2] = new Cell(3, 2, Cell.Type.WALL);
 
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
+
+        List<Coordinate> path = solver.solve(maze);
 
         assertThat(path).isEmpty();
     }
 
     @Test
     public void testSolveStartEqualsEnd() {
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(1, 1));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(1, 1));
+        List<Coordinate> path = solver.solve(maze);
 
         assertThat(path)
             .isNotEmpty()
@@ -66,12 +73,17 @@ public class BFSSolverTest {
         // Create a single narrow path in the maze
         maze = createSinglePathMaze(5, 5);
 
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
+
+        List<Coordinate> path = solver.solve(maze);
 
         assertNotNull(path, "Path should not be null");
         assertThat(path)
             .isNotEmpty()
             .as("Path should follow the only available route")
+            .startsWith(new Coordinate(1, 1))
+            .endsWith(new Coordinate(3, 3))
             .contains(new Coordinate(2, 1), new Coordinate(2, 2), new Coordinate(3, 2));
     }
 

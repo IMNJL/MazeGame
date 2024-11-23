@@ -29,8 +29,10 @@ public class AStarSolverTest {
 
     @Test
     public void testSolvePathFound() {
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
 
+        List<Coordinate> path = solver.solve(maze);
         assertThat(path)
             .isNotEmpty()
             .as("Path should be found from (1, 1) to (3, 3)")
@@ -46,14 +48,19 @@ public class AStarSolverTest {
         maze.setCell(2, 3, Cell.Type.WALL);
         maze.setCell(3, 2, Cell.Type.WALL);
 
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
+
+        List<Coordinate> path = solver.solve(maze);
 
         assertThat(path).isEmpty();
     }
 
     @Test
     public void testSolveStartEqualsEnd() {
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(1, 1));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(1, 1));
+        List<Coordinate> path = solver.solve(maze);
 
         assertThat(path)
             .isNotEmpty()
@@ -67,7 +74,10 @@ public class AStarSolverTest {
         // Create a single narrow path in the maze
         maze = createSinglePathMaze(5, 5);
 
-        List<Coordinate> path = solver.solve(maze, new Coordinate(1, 1), new Coordinate(3, 3));
+        maze.start(new Coordinate(1, 1));
+        maze.end(new Coordinate(3, 3));
+
+        List<Coordinate> path = solver.solve(maze);
 
         assertNotNull(path, "Path should not be null");
         assertThat(path)
