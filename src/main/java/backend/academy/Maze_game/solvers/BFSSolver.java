@@ -18,12 +18,14 @@ public class BFSSolver implements Solver {
     @Getter private int[][] distances;
     private static final Logger LOGGER = LoggerFactory.getLogger(BFSSolver.class);
 
-    private static int xs;
-    private static int ys;
+    private int xs;
+    private int ys;
     List<Coordinate> path;
 
     @Override
-    public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+    public List<Coordinate> solve(Maze maze) {
+        Coordinate start = maze.start();
+        Coordinate end = maze.end();
         xs = maze.width();
         ys = maze.height();
         distances = new int[ys][xs];
@@ -64,7 +66,7 @@ public class BFSSolver implements Solver {
         LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    static boolean isValid(Maze maze, int row, int col) {
+    public boolean isValid(Maze maze, int row, int col) {
         return row >= 0 && row < ys && col >= 0 && col < xs && maze.grid()[row][col].type() != Cell.Type.WALL;
     }
 

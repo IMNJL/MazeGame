@@ -91,7 +91,7 @@ public class MazeUtil {
         LOGGER.info("Start coordinates: {}", start);
         LOGGER.info("End coordinates: {}", end);
 
-        List<Coordinate> path = solver.solve(maze, start, end);
+        List<Coordinate> path = solver.solve(maze);
 
         Renderer renderer = new StylishConsoleRenderer();
         if (path == null || path.isEmpty()) {

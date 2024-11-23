@@ -5,6 +5,8 @@ import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Maze;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatExceptionOfType;
 import static org.junit.jupiter.api.Assertions.*;
@@ -45,22 +47,11 @@ public class KruskalGeneratorTest {
         assertTrue(hasPassages);
     }
 
-    @Test
-    public void testGenerateMazeWithInvalidDimensions() {
+    @ParameterizedTest
+    @CsvSource({"0,10", "10,0", "-1,10", "10,-1"})
+    public void testGenerateMazeWithInvalidDimensions(int height, int width) {
         assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> generator.generate(0, 10))
-            .withMessage("Maze dimensions must be positive");
-
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> generator.generate(10, 0))
-            .withMessage("Maze dimensions must be positive");
-
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> generator.generate(-1, 10))
-            .withMessage("Maze dimensions must be positive");
-
-        assertThatExceptionOfType(IllegalArgumentException.class)
-            .isThrownBy(() -> generator.generate(10, -1))
+            .isThrownBy(() -> generator.generate(height, width))
             .withMessage("Maze dimensions must be positive");
     }
 

@@ -1,5 +1,6 @@
 package backend.academy.Maze_game.solvers;
 
+import backend.academy.Maze_game.utility.Cell;
 import backend.academy.Maze_game.utility.Coordinate;
 import backend.academy.Maze_game.utility.Direction;
 import backend.academy.Maze_game.utility.Maze;
@@ -23,7 +24,9 @@ public class DijkstraSolver implements Solver {
     private int yS;
 
     @Override
-    public List<Coordinate> solve(Maze maze, Coordinate start, Coordinate end) {
+    public List<Coordinate> solve(Maze maze) {
+        Coordinate start = maze.start();
+        Coordinate end = maze.end();
         xS = maze.width();
         yS = maze.height();
         distances = new int[yS][xS];
@@ -50,17 +53,18 @@ public class DijkstraSolver implements Solver {
                 return;
             }
 
-            someMethod(maze, current, queue);
+            movingThrowDistances(maze, current, queue);
         }
         LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    private void someMethod(Maze maze, Node current, PriorityQueue<Node> queue) {
+
+    public void movingThrowDistances(Maze maze, Node current, PriorityQueue<Node> queue) {
         for (Direction direction : Direction.values()) {
             int newRow = current.row + direction.dy();
             int newCol = current.col + direction.dx();
 
-            if (BFSSolver.isValid(maze, newRow, newCol)) {
+            if (isValid(maze, newRow, newCol)) {
                 int newCost = current.cost + 1; // Uniform cost
                 if (newCost < distances[newRow][newCol]) {
                     distances[newRow][newCol] = newCost;
@@ -69,6 +73,11 @@ public class DijkstraSolver implements Solver {
             }
         }
     }
+
+    private boolean isValid(Maze maze, int row, int col) {
+        return !(row < 0 || row >= yS || col < 0 || col >= xS || maze.grid()[row][col].type() == Cell.Type.WALL);
+    }
+
 
     private void buildPath(Coordinate end) {
         int row = end.row();
