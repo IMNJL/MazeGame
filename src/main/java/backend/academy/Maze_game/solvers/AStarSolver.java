@@ -73,12 +73,13 @@ public class AStarSolver implements Solver {
         py.add(y0);
         map[y0][x0] = 0;
 
+        boolean expanded = false;
         for (int j = 1; j < xs * ys; j++) {
             if (map[y1][x1] != A_STAR_SPACE) {
+                LOGGER.debug("Path found to ({}, {}).", y1, x1);
                 return true;
             }
 
-            boolean expanded = false;
             int n0 = px.size(); // Number of cells to expand
 
             for (int ii = 0; ii < n0; ii++) {
@@ -97,6 +98,7 @@ public class AStarSolver implements Solver {
                         expanded = true;
                     }
                 }
+
             }
 
             if (!expanded) {
@@ -105,7 +107,7 @@ public class AStarSolver implements Solver {
             }
         }
 
-        return false;
+        return expanded;
     }
 
     void buildPath(int y1, int x1) {

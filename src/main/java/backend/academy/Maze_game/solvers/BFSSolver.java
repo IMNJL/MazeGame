@@ -66,7 +66,7 @@ public class BFSSolver implements Solver {
         LOGGER.info("Path not found. Ending with no solution.");
     }
 
-    public boolean isValid(Maze maze, int row, int col) {
+    private boolean isValid(Maze maze, int row, int col) {
         return row >= 0 && row < ys && col >= 0 && col < xs && maze.grid()[row][col].type() != Cell.Type.WALL;
     }
 
